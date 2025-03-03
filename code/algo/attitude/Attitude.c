@@ -1,7 +1,7 @@
 #include "Attitude.h"
 #include "QuaternionEKF.h"
 #include "control.h"
-#include "imu.h"
+
 #include "velocity.h"
 #include "zf_common_headfile.h"
 
@@ -15,15 +15,14 @@ void attitude_init() {
 
 void attitude_cal_ekf() {
     // EKF 姿态解算
-    IMU_DATA tmp_imu_data;
-    imu_get_data(&tmp_imu_data);
-    imu_remove_offset(&tmp_imu_data);
+    imu_get_data(&g_imu_data);
+    imu_remove_offset(&g_imu_data);
     // // LowPassFilter
     // LowPassFilter(&Accelerometer[0], IMUdata.acc.x);
     // LowPassFilter(&Accelerometer[1], IMUdata.acc.y);
     // LowPassFilter(&Accelerometer[2], IMUdata.acc.z);
 
-    IMU_QuaternionEKF_Update(&tmp_imu_data);
+    IMU_QuaternionEKF_Update(&g_imu_data);
 }
 
 void attitude_cal_amend(Control_Turn_Manual_Params* turn_param,

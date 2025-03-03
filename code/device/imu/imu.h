@@ -23,6 +23,6 @@ void imu_get_data(IMU_DATA* data);
 void imu_init_offset();
 void imu_remove_offset(IMU_DATA* data);
 
-// extern IMU_DATA g_imu_data;
+extern IMU_DATA g_imu_data;
 extern float gyroOffset[3];  // gyroOffset
 #endif
