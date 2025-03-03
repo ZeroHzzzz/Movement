@@ -1,17 +1,16 @@
 #include "encoder.h"
-#include "velocity.h"
 #include "zf_common_headfile.h"
 
 static void pass_momentum_encoder(int32 frontValue,
                                   int32 backValue,
-                                  MotorVelocity* motorVelocity) {
+                                  Velocity_Motor* motorVelocity) {
     motorVelocity->momentumFront = -frontValue;
     motorVelocity->momentumBack = -backValue;
     motorVelocity->velocityDiff =
         motorVelocity->momentumFront + motorVelocity->momentumBack;
 }
 
-static void pass_bottom_encoder(int32 value, MotorVelocity* motorVelocity) {
+static void pass_bottom_encoder(int32 value, Velocity_Motor* motorVelocity) {
     // filter the noise
     if (abs(value) < 5) {
         value = 0;
@@ -34,7 +33,7 @@ void encoder_init() {
                      ENCODER_PIN1_BACK);
 }
 
-void get_momentum_encoder(MotorVelocity* motorVelocity) {
+void get_momentum_encoder(Velocity_Motor* motorVelocity) {
     static int32 frontEncoder[3] = {0, 0, 0};
     static int32 backEncoder[3] = {0, 0, 0};
     frontEncoder[2] = frontEncoder[1];
@@ -58,7 +57,7 @@ void get_momentum_encoder(MotorVelocity* motorVelocity) {
     // passMomentumEncoder(frontEncoder[0],backEncoder[0]);
 }
 
-void get_bottom_encoder(MotorVelocity* motorVelocity) {
+void get_bottom_encoder(Velocity_Motor* motorVelocity) {
     // static int32 bottomEncoder[3] = {0,0,0};
     // bottomEncoder[2] = bottomEncoder[1];
     // bottomEncoder[1] = bottomEncoder[0];

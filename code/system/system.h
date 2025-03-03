@@ -36,4 +36,5 @@
     }
 
 void system_init();
+void system_attitude_timer();
 #endif

@@ -11,6 +11,8 @@ typedef struct {
     float bottomFiltered;
     int32 bottomSum;
     int32 velocityDiff;
-} MotorVelocity;
+} Velocity_Motor;
+
+extern Velocity_Motor g_vel_motor;
 
 #endif

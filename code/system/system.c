@@ -1,4 +1,7 @@
 #include "system.h"
+#include "Attitude.h"
+#include "control.h"
+#include "velocity.h"
 #include "zf_common_headfile.h"
 
 void system_init() {
@@ -15,4 +18,17 @@ void system_init() {
 
     // init encoder
     encoder_init();
+}
+
+void system_attitude_timer() {
+    static uint8 imuCnt = 0;
+    imuCnt++;
+    if (imuCnt >= 2) {
+        imuCnt = 0;
+        g_attitude_cal_flag = 1;
+        attitude_cal_amend(&g_turn_manual_params, &g_control_target,
+                           &g_vel_motor);
+    } else {
+        g_attitude_cal_flag = 0;
+    }
 }

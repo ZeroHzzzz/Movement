@@ -1,7 +1,7 @@
 #ifndef _IMU_H_
 #define _IMU_H_
 
-#define G 9.7936f
+#define GravityAcc 9.7936f
 #define cheat_define 0.0016f
 #define gyroscope_threshold 5
 #define DEG2RAD 0.0174533f
