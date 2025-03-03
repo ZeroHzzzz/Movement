@@ -26,50 +26,52 @@ void attitude_cal_ekf() {
     IMU_QuaternionEKF_Update(&tmp_imu_data);
 }
 
-void attitude_cal_amend() {
-    // 修正姿态计算
-    if (g_attitude_cal_flag == 0) {
-        return;
-    } else {
-        g_attitude_cal_flag = 0;
-    }
+// void attitude_cal_amend() {
+//     // 修正姿态计算
+//     if (g_attitude_cal_flag == 0) {
+//         return;
+//     } else {
+//         g_attitude_cal_flag = 0;
+//     }
 
-    if (curvatureStartFlag) {
-        float x = (float)controlTarget.turnAngleVelocity * 0.01f *
-                  fabsf((float)motorVelocity.bottomFiltered * 0.01f);
-        controlTarget.bucking = buckingK * x;
-        restrictValueF(&controlTarget.bucking, 10.5f, -10.5f);
-        controlTarget.Fbucking = x * bucklingFrontCoefficientT;
-        restrictValueF(&controlTarget.Fbucking, 5.0f, -5.0f);
-    }
-#ifdef USE_MAHONY
-    Mahony_update(imu963raSensorData.gyro.x, imu963raSensorData.gyro.y,
-                  imu963raSensorData.gyro.z, imu963raSensorData.acc.x,
-                  imu963raSensorData.acc.y, imu963raSensorData.acc.z, 0, 0, 0);
-    Mahony_computeAngles();
-    g_euler_angle.roll = getRoll() + controlTarget.bucking;
-    g_euler_angle.pitch = getPitch();
-    g_euler_angle.yaw =
-        getYaw() - 180 +
-        yawAngleCorrection;  //-180 because the direction of the sensor is
-                             // opposite to the direction of the motor
-#endif
-#ifdef USE_EKF
-    // Attitude_Calculate(imu963raSensorData.gyro.x,imu963raSensorData.gyro.y,imu963raSensorData.gyro.z,imu963raSensorData.acc.x,imu963raSensorData.acc.y,imu963raSensorData.acc.z);
-    attitude_cal_ekf();
-    g_euler_angle.roll =
-        QEKF_INS.Roll + controlTarget.bucking;  // + convergenceGain;
-    g_euler_angle.pitch = QEKF_INS.Pitch + controlTarget.Fbucking;
-    g_euler_angle.yaw = QEKF_INS.Yaw;
-#endif
-    // g_euler_angle.yaw += 180; // transfer to the same direction
-    g_euler_angle.yaw = 360.0f - g_euler_angle.yaw;  // opposite direction
-    // g_euler_angle.yaw += yawAngleCorrection;
-    g_euler_angle.yaw > 360 ? (g_euler_angle.yaw -= 360)
-                            : g_euler_angle.yaw;  // 0~360
-    // update module state
-    // moduleState.attitude = 1;
-}
+//     if (curvatureStartFlag) {
+//         float x = (float)controlTarget.turnAngleVelocity * 0.01f *
+//                   fabsf((float)motorVelocity.bottomFiltered * 0.01f);
+//         controlTarget.bucking = buckingK * x;
+//         restrictValueF(&controlTarget.bucking, 10.5f, -10.5f);
+//         controlTarget.Fbucking = x * bucklingFrontCoefficientT;
+//         restrictValueF(&controlTarget.Fbucking, 5.0f, -5.0f);
+//     }
+// #ifdef USE_MAHONY
+//     Mahony_update(imu963raSensorData.gyro.x, imu963raSensorData.gyro.y,
+//                   imu963raSensorData.gyro.z, imu963raSensorData.acc.x,
+//                   imu963raSensorData.acc.y, imu963raSensorData.acc.z, 0, 0,
+//                   0);
+//     Mahony_computeAngles();
+//     g_euler_angle.roll = getRoll() + controlTarget.bucking;
+//     g_euler_angle.pitch = getPitch();
+//     g_euler_angle.yaw =
+//         getYaw() - 180 +
+//         yawAngleCorrection;  //-180 because the direction of the sensor is
+//                              // opposite to the direction of the motor
+// #endif
+// #ifdef USE_EKF
+//     //
+//     Attitude_Calculate(imu963raSensorData.gyro.x,imu963raSensorData.gyro.y,imu963raSensorData.gyro.z,imu963raSensorData.acc.x,imu963raSensorData.acc.y,imu963raSensorData.acc.z);
+//     attitude_cal_ekf();
+//     g_euler_angle.roll =
+//         QEKF_INS.Roll + controlTarget.bucking;  // + convergenceGain;
+//     g_euler_angle.pitch = QEKF_INS.Pitch + controlTarget.Fbucking;
+//     g_euler_angle.yaw = QEKF_INS.Yaw;
+// #endif
+//     // g_euler_angle.yaw += 180; // transfer to the same direction
+//     g_euler_angle.yaw = 360.0f - g_euler_angle.yaw;  // opposite direction
+//     // g_euler_angle.yaw += yawAngleCorrection;
+//     g_euler_angle.yaw > 360 ? (g_euler_angle.yaw -= 360)
+//                             : g_euler_angle.yaw;  // 0~360
+//     // update module state
+//     // moduleState.attitude = 1;
+// }
 
 void attitude_show() {
     tft180_full(RGB565_WHITE);
