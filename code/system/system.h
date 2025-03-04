@@ -27,6 +27,27 @@
         LED3_on; \
     }
 
+struct Control_Time;
+struct Control_Flag;
+struct Control_Target;
+struct Velocity_Motor;
+struct EulerAngle;
+
 void system_init();
 void system_attitude_timer();
+void bottom_control_timer(struct Control_Time* control_time,
+                          struct Control_Flag* control_flag,
+                          struct Control_Target* control_target,
+                          struct Velocity_Motor* vel_motor,
+                          struct EulerAngle* euler_angle_bias);
+void side_control_timer(struct Control_Time* control_time,
+                        struct Control_Flag* control_flag,
+                        struct Control_Target* control_target,
+                        struct Velocity_Motor* vel_motor,
+                        struct EulerAngle* euler_angle_bias);
+void turn_control_timer(struct Control_Time* control_time,
+                        struct Control_Flag* control_flag,
+                        struct Control_Target* control_target,
+                        struct Velocity_Motor* vel_motor,
+                        struct EulerAngle* euler_angle_bias);
 #endif
