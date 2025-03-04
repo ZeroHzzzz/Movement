@@ -90,6 +90,8 @@ extern uint8 g_turn_start_flag;
 extern struct Control_Turn_Manual_Params g_control_turn_manual_params;
 extern struct Control_Target g_control_target;
 extern struct Control_Flag g_control_flag;
+extern struct Control_Time g_control_time;
+extern struct Control_Motion_Manual_Parmas g_control_motion_params;
 
 void control_manual_param_init();
 void control_bottom_balance(struct Control_Target* control_target,

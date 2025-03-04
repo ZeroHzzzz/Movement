@@ -29,7 +29,7 @@ MENU_TABLE Table_Null[] = {
 };
 //======================================================================================================================
 
-volatile uint8 ExitMenu_flag = 0;
+uint8 g_exit_menu_flag = 0;
 
 uint32* EEPROM_DATA_UINT[] = {
     (uint32*)(&g_menu_manual_param.bottom_angle_parameter[0]),
@@ -280,7 +280,7 @@ MENU_TABLE MainMenu_Table[] = {
  * ReturnValue    : None
  *******************************************************************************/
 void MainMenu_Set(void) {
-    ExitMenu_flag = 0;
+    // ExitMenu_flag = 0;
     lcd_clear();
     MENU_PRMT MainMenu_Prmt;
     uint8 menuNum =
@@ -383,7 +383,9 @@ uint8 Menu_Move(MENU_PRMT* prmt, KEY_e key) {
  * ReturnValue    : 按键值
  *******************************************************************************/
 KEY_e KeySan(void) {
-    while (keymsg.status == KEY_UP && !ExitMenu_flag)
+    // while (keymsg.status == KEY_UP && !ExitMenu_flag)
+    //     ;
+    while (keymsg.status == KEY_UP)
         ;
     keymsg.status = KEY_UP;
     return keymsg.key;
@@ -651,7 +653,8 @@ void Menu_Process(uint8* menuName,
                 //                }
             }
         }
-    } while (prmt->ExitMark == 0 && ExitMenu_flag == 0);
+        // } while (prmt->ExitMark == 0 && ExitMenu_flag == 0);
+    } while (prmt->ExitMark == 0);
     lcd_clear();
 }
 

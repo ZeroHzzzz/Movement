@@ -2,14 +2,19 @@
 #include "menu_input.h"
 #include "motor.h"
 #include "pid.h"
+#include "system.h"
 #include "velocity.h"
 #include "zf_common_headfile.h"
 
+// global
 uint8 g_turn_start_flag = 0;
 struct Control_Turn_Manual_Params g_control_turn_manual_params;
 struct Control_Target g_control_target;
 struct Control_Flag g_control_flag;
+struct Control_Time g_control_time;
+struct Control_Motion_Manual_Parmas g_control_motion_params;
 
+// static
 static int32 s_bottom_balance_duty = 0;
 static int32 s_side_balance_duty = 0;
 static int32 s_momentum_diff = 0;
@@ -20,8 +25,8 @@ static void control_param_init(pid_type_def* pid,
                                float maxOut,
                                float maxIOut);
 // static float control_bottom_feedforward();
-static void control_shutdown(struct Control_Target* control_target,
-                             struct EulerAngle* euler_angle_bias);
+// static void control_shutdown(struct Control_Target* control_target,
+//                              struct EulerAngle* euler_angle_bias);
 
 // bottom
 static void control_bottom_velocity(struct Velocity_Motor* vel_motor,
@@ -366,13 +371,13 @@ void control_shutdown(struct Control_Target* control_target,
               control_target->sideAngle) > 28) {
         stop_bottom_motor();
         stop_momentum_motor();
-        // runState = CAR_STOP;
+        runState = CAR_STOP;
     }
     if (fabsf(currentFrontAngle - euler_angle_bias->roll -
               control_target->frontAngle) > 60) {
         stop_bottom_motor();
         stop_momentum_motor();
-        // runState = CAR_STOP;
+        runState = CAR_STOP;
     }
 }
 
@@ -413,77 +418,6 @@ void control_init(struct Control_Motion_Manual_Parmas* control_motion_params) {
     control_param_init(&turn_angle_velocity_PID,
                        control_motion_params->turn_velocity_parameter, 1, 9999,
                        500);
-
-    // {
-    // float outputKpSet[7] = {0};
-    // float outputKiSet[7] = {0};
-    // float outputKdSet[7] = {0};
-    // for(uint8 i = 0; i < 7; i++){
-    //     outputKpSet[i] = (float)menuSideAngleParameter[0] / 100.0f * abs(3 -
-    //     i); outputKiSet[i] = (float)menuSideAngleParameter[1] / 100.0f *
-    //     abs(3 - i); outputKdSet[i] = (float)menuSideAngleParameter[2] /
-    //     100.0f * abs(3 - i);
-    // }
-    // float n[3] = {0};
-    // for(uint8 i=0;i<3;i++){
-    //     n[i] = (float)menuSideAngleParameter[i] / 100.0f;
-    // }
-    // outputKpSet[0] = 1.95f * n[0];
-    // outputKpSet[1] = 1.95f * n[0];
-    // outputKpSet[2] = 2 * n[0];
-    // outputKpSet[3] = 1.2f * n[0];
-    // outputKpSet[4] = outputKpSet[2];
-    // outputKpSet[5] = outputKpSet[1];
-    // outputKpSet[6] = outputKpSet[0];
-
-    // outputKiSet[0] =  n[1];
-    // outputKiSet[1] =  n[1];
-    // outputKiSet[2] =  n[1];
-    // outputKiSet[3] = n[1];
-    // outputKiSet[4] = outputKiSet[2];
-    // outputKiSet[5] = outputKiSet[1];
-    // outputKiSet[6] = outputKiSet[0];
-
-    // outputKdSet[0] = n[2];
-    // outputKdSet[1] = n[2];
-    // outputKdSet[2] = n[2];
-    // outputKdSet[3] = n[2];
-    // outputKdSet[4] = outputKdSet[2];
-    // outputKdSet[5] = outputKdSet[1];
-    // outputKdSet[6] = outputKdSet[0];
-    // // fuzzySetInit(&sideBalanceFuzzy, inputSet, outputKpSet, outputKiSet,
-    // outputKdSet);
-    // // simpleFuzzySetInit(&sideBalanceSimpleFuzzy, inputSet, outputKpSet,
-    // outputKiSet, outputKdSet); for(uint8 i=0;i<3;i++){
-    //     n[i] = (float)menuFrontAngleParameter[i] / 100.0f;
-    // }
-    // outputKpSet[0] = 2.5 * n[0];
-    // outputKpSet[1] = 2 * n[0];
-    // outputKpSet[2] = 1.5 * n[0];
-    // outputKpSet[3] = n[0];
-    // outputKpSet[4] = outputKpSet[2];
-    // outputKpSet[5] = outputKpSet[1];
-    // outputKpSet[6] = outputKpSet[0];
-
-    // outputKiSet[0] = 2.5 * n[1];
-    // outputKiSet[1] = 2 * n[1];
-    // outputKiSet[2] = 1.5 * n[1];
-    // outputKiSet[3] = n[1];
-    // outputKiSet[4] = outputKiSet[2];
-    // outputKiSet[5] = outputKiSet[1];
-    // outputKiSet[6] = outputKiSet[0];
-
-    // outputKdSet[0] = 2.5 * n[2];
-    // outputKdSet[1] = 2 * n[2];
-    // outputKdSet[2] = 1.5 * n[2];
-    // outputKdSet[3] = n[2];
-    // outputKdSet[4] = outputKdSet[2];
-    // outputKdSet[5] = outputKdSet[1];
-    // outputKdSet[6] = outputKdSet[0];
-    // fuzzySetInit(&frontBalanceFuzzy, inputSet, outputKpSet, outputKiSet,
-    // outputKdSet); simpleFuzzySetInit(&frontBalanceSimpleFuzzy, inputSet,
-    // outputKpSet, outputKiSet, outputKdSet);
-    // }
 }
 
 /// @brief init the control parameter in the menu

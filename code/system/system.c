@@ -2,9 +2,12 @@
 #include "attitude.h"
 #include "control.h"
 #include "lcd.h"
+#include "menu.h"
 #include "small_driver_uart_control.h"
 #include "velocity.h"
 #include "zf_common_headfile.h"
+
+RunState_t runState;
 
 void system_init() {
     // init lcd
@@ -25,11 +28,20 @@ void system_init() {
 
     // menu_param
     menu_manual_param_init();
+
+    control_manual_param_init();
+
+    velocity_init(&g_vel_motor);
+
     // menu
     MainMenu_Set();
 
+    // menu_params
+    menu_get_params(&g_euler_angle_bias, &g_control_time,
+                    &g_control_turn_manual_params, &g_control_motion_params);
+
     // control init
-    control_init();
+    control_init(&g_control_motion_params);
 }
 
 void system_attitude_timer(

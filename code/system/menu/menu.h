@@ -52,6 +52,8 @@ struct Site_t {
     uint8 y;
 };
 
+extern uint8 g_exit_menu_flag;
+
 void Read_EEPROM(void);
 void Write_EEPROM(void);
 // void Menu_PrmtInit(MENU_PRMT* prmt, uint8 num, uint8 page);

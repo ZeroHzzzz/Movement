@@ -38,8 +38,10 @@
 #include "attitude.h"
 #include "control.h"
 #include "isr_config.h"
+#include "menu.h"
 #include "system.h"
 #include "velocity.h"
+
 // 对于TC系列默认是不支持中断嵌套的，希望支持中断嵌套需要在中断内使用
 // interrupt_global_enable(0); 来开启中断嵌套
 // 简单点说实际上进入中断后TC系列的硬件自动调用了 interrupt_global_disable();
@@ -63,8 +65,10 @@ IFX_INTERRUPT(cc60_pit_ch1_isr,
     pit_clear_flag(CCU60_CH1);
     // key
     key_IRQHandler();
-    while (key_get_msg(&keymsg))
-        ;
+
+    // TODO: check if it works
+    // while (key_get_msg(&keymsg))
+    //     ;
 }
 
 IFX_INTERRUPT(cc61_pit_ch0_isr,
@@ -72,6 +76,44 @@ IFX_INTERRUPT(cc61_pit_ch0_isr,
               CCU6_1_CH0_ISR_PRIORITY) {
     interrupt_global_enable(0);  // 开启中断嵌套
     pit_clear_flag(CCU61_CH0);
+
+    if (g_exit_menu_flag) {
+        if (runState == CAR_STABLE) {
+            static uint16 count = 0;
+            count++;
+            g_control_target.frontVelocity = 0;
+            bottom_control_timer(&g_control_time, &g_control_flag,
+                                 &g_control_target, &g_vel_motor,
+                                 &g_euler_angle_bias);
+            // turnControlTimer();
+            side_control_timer(&g_control_time, &g_control_flag,
+                               &g_control_target, &g_control_turn_manual_params,
+                               &g_vel_motor, &g_euler_angle_bias);
+            control_shutdown(&g_control_target, &g_euler_angle_bias);
+
+            if (count >= 1500) {
+                count = 0;
+                runState = CAR_RUNNING;
+            }
+        }
+        if (runState == CAR_RUNNING) {
+            static uint8 once = 0;
+            // if (receiverEnable != 1 && once == 0) {
+            if (once == 0) {
+                g_control_target.frontVelocity =
+                    (float)g_control_motion_params.bottom_velocity;
+                once = 1;
+            }
+            bottom_control_timer(&g_control_time, &g_control_flag,
+                                 &g_control_target, &g_vel_motor,
+                                 &g_euler_angle_bias);
+            // turnControlTimer();
+            side_control_timer(&g_control_time, &g_control_flag,
+                               &g_control_target, &g_control_turn_manual_params,
+                               &g_vel_motor, &g_euler_angle_bias);
+            control_shutdown(&g_control_target, &g_euler_angle_bias);
+        }
+    }
 }
 
 IFX_INTERRUPT(cc61_pit_ch1_isr,
