@@ -5,7 +5,7 @@
 
 #define V_KALMAN_MULTIPLE 500
 
-typedef struct {
+struct Velocity_Motor {
     int32 momentumFront;
     int32 momentumBack;
     int32 bottom;
@@ -13,10 +13,10 @@ typedef struct {
     float bottomFiltered;
     int32 bottomSum;
     int32 velocityDiff;
-} Velocity_Motor;
+};
 
-extern Velocity_Motor g_vel_motor;
+extern struct Velocity_Motor g_vel_motor;
 
-void velocity_init(Velocity_Motor* vel_motor);
-void velocity_update(Velocity_Motor* vel_motor);
+void velocity_init(struct Velocity_Motor* vel_motor);
+void velocity_update(struct Velocity_Motor* vel_motor);
 #endif

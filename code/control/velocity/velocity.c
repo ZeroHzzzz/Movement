@@ -4,11 +4,11 @@
 
 #define VELOCITY_KALMAN_FILTER
 
-Velocity_Motor g_vel_motor;
+struct Velocity_Motor g_vel_motor;
 static kalman_filter_velocity_t s_kf;
 static uint8 s_vel_update_flag = 0;
 
-void velocity_init(Velocity_Motor* vel_motor) {
+void velocity_init(struct Velocity_Motor* vel_motor) {
     vel_motor->momentumFront = 0;
     vel_motor->momentumBack = 0;
     vel_motor->bottom = 0;
@@ -22,7 +22,7 @@ void velocity_init(Velocity_Motor* vel_motor) {
 #endif
 }
 
-void velocity_update(Velocity_Motor* vel_motor) {
+void velocity_update(struct Velocity_Motor* vel_motor) {
     get_momentum_encoder(vel_motor);
     get_momentum_encoder(vel_motor);
 #ifdef VELOCITY_KALMAN_FILTER

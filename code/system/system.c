@@ -27,7 +27,7 @@ void system_attitude_timer() {
         imuCnt = 0;
         g_attitude_cal_flag = 1;
         attitude_cal_amend(&g_turn_manual_params, &g_control_target,
-                           &g_vel_motor);
+                           &g_vel_motor, &g_euler_angle);
     } else {
         g_attitude_cal_flag = 0;
     }

@@ -1,24 +1,25 @@
 #include "encoder.h"
+#include "velocity.h"
 #include "zf_common_headfile.h"
 
 static void pass_momentum_encoder(int32 frontValue,
                                   int32 backValue,
-                                  Velocity_Motor* motorVelocity) {
-    motorVelocity->momentumFront = -frontValue;
-    motorVelocity->momentumBack = -backValue;
-    motorVelocity->velocityDiff =
-        motorVelocity->momentumFront + motorVelocity->momentumBack;
+                                  struct Velocity_Motor* vel_motor) {
+    vel_motor->momentumFront = -frontValue;
+    vel_motor->momentumBack = -backValue;
+    vel_motor->velocityDiff =
+        vel_motor->momentumFront + vel_motor->momentumBack;
 }
 
-static void pass_bottom_encoder(int32 value, Velocity_Motor* motorVelocity) {
+static void pass_bottom_encoder(int32 value, struct Velocity_Motor* vel_motor) {
     // filter the noise
     if (abs(value) < 5) {
         value = 0;
     } else {
         value > 0 ? (value -= 5) : (value += 5);
     }
-    motorVelocity->bottom = value;
-    motorVelocity->bottomSum += value;
+    vel_motor->bottom = value;
+    vel_motor->bottomSum += value;
 }
 
 void encoder_init() {
@@ -33,7 +34,7 @@ void encoder_init() {
                      ENCODER_PIN1_BACK);
 }
 
-void get_momentum_encoder(Velocity_Motor* motorVelocity) {
+void get_momentum_encoder(struct Velocity_Motor* vel_motor) {
     static int32 frontEncoder[3] = {0, 0, 0};
     static int32 backEncoder[3] = {0, 0, 0};
     frontEncoder[2] = frontEncoder[1];
@@ -49,7 +50,7 @@ void get_momentum_encoder(Velocity_Motor* motorVelocity) {
     encoder_clear_count(MOMENTUM_ENCODER_FRONT);
     encoder_clear_count(MOMENTUM_ENCODER_BACK);
     // lowPass filter
-    pass_momentum_encoder(frontEncoderTemp, backEncoderTemp, motorVelocity);
+    pass_momentum_encoder(frontEncoderTemp, backEncoderTemp, vel_motor);
     // frontEncoder[0] = (int32)(0.879*(float)frontEncoderTemp +/tvfg5rf
     // 0.121*(float)frontEncoder[1]); backEncoder[0] =
     // (int32)(0.879*(float)backEncoderTemp +
@@ -57,7 +58,7 @@ void get_momentum_encoder(Velocity_Motor* motorVelocity) {
     // passMomentumEncoder(frontEncoder[0],backEncoder[0]);
 }
 
-void get_bottom_encoder(Velocity_Motor* motorVelocity) {
+void get_bottom_encoder(struct Velocity_Motor* vel_motor) {
     // static int32 bottomEncoder[3] = {0,0,0};
     // bottomEncoder[2] = bottomEncoder[1];
     // bottomEncoder[1] = bottomEncoder[0];
@@ -73,5 +74,5 @@ void get_bottom_encoder(Velocity_Motor* motorVelocity) {
     int32 bottom = -encoder_get_count(ENCODER_BOTTOM);
 
     encoder_clear_count(ENCODER_BOTTOM);
-    pass_bottom_encoder(bottom, motorVelocity);
+    pass_bottom_encoder(bottom, vel_motor);
 }

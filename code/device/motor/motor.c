@@ -1,5 +1,7 @@
 #include "motor.h"
 
+uint32 bottom_motor_deadzone = 0;
+
 static void set_back_motor_pwm(int32 pwm);
 static void set_front_motor_pwm(int32 pwm);
 static void limit_motor_pwm(int32* value, int32 min, int32 max);

@@ -1,11 +1,12 @@
 #include "Attitude.h"
 #include "QuaternionEKF.h"
 #include "control.h"
-
 #include "velocity.h"
 #include "zf_common_headfile.h"
 
-EulerAngle g_euler_angle;
+struct EulerAngle g_euler_angle;
+struct EulerAngle g_euler_angle_bias;
+
 uint8 g_attitude_cal_flag = 0;
 
 void attitude_init() {
@@ -25,9 +26,10 @@ void attitude_cal_ekf() {
     IMU_QuaternionEKF_Update(&g_imu_data);
 }
 
-void attitude_cal_amend(Control_Turn_Manual_Params* turn_param,
-                        Control_Target* control_target,
-                        Velocity_Motor* velocity_motor) {
+void attitude_cal_amend(struct Control_Turn_Manual_Params* turn_param,
+                        struct Control_Target* control_target,
+                        struct Velocity_Motor* velocity_motor,
+                        struct EulerAngle* euler_angle) {
     // 修正姿态计算
     if (g_attitude_cal_flag == 0) {
         return;
@@ -48,25 +50,25 @@ void attitude_cal_amend(Control_Turn_Manual_Params* turn_param,
                   imu963raSensorData.gyro.z, imu963raSensorData.acc.x,
                   imu963raSensorData.acc.y, imu963raSensorData.acc.z, 0, 0, 0);
     Mahony_computeAngles();
-    g_euler_angle.roll = getRoll() + control_target.bucking;
-    g_euler_angle.pitch = getPitch();
-    g_euler_angle.yaw =
+    euler_angle->roll = getRoll() + control_target->bucking;
+    euler_angle->pitch = getPitch();
+    euler_angle->yaw =
         getYaw() - 180 +
         yawAngleCorrection;  //-180 because the direction of the sensor is
                              // opposite to the direction of the motor
 #endif
 #ifdef USE_EKF
     attitude_cal_ekf();
-    g_euler_angle.roll =
+    euler_angle->roll =
         QEKF_INS.Roll + control_target->bucking;  // + convergenceGain;
-    g_euler_angle.pitch = QEKF_INS.Pitch + control_target->Fbucking;
-    g_euler_angle.yaw = QEKF_INS.Yaw;
+    euler_angle->pitch = QEKF_INS.Pitch + control_target->Fbucking;
+    euler_angle->yaw = QEKF_INS.Yaw;
 #endif
-    // g_euler_angle.yaw += 180; // transfer to the same direction
-    g_euler_angle.yaw = 360.0f - g_euler_angle.yaw;  // opposite direction
-    // g_euler_angle.yaw += yawAngleCorrection;
-    g_euler_angle.yaw > 360 ? (g_euler_angle.yaw -= 360)
-                            : g_euler_angle.yaw;  // 0~360
+    // g_euler_angle->yaw += 180; // transfer to the same direction
+    euler_angle->yaw = 360.0f - euler_angle->yaw;  // opposite direction
+    // g_euler_angle->yaw += yawAngleCorrection;
+    euler_angle->yaw > 360 ? (euler_angle->yaw -= 360)
+                           : euler_angle->yaw;  // 0~360
     // update module state
     // moduleState.attitude = 1;
 }

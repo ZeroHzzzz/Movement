@@ -24,6 +24,8 @@
 #define MOTOR_PWM_MAX 8000
 #define MOTOR_PWM_MIN -8000
 
+extern uint32 bottom_motor_deadzone;
+
 void motor_init();
 void set_bottom_motor_pwn(int32 pwm);
 void set_bottom_motor_hertz(int32 hertz);
@@ -32,4 +34,4 @@ void stop_bottom_motor(void);
 void set_momentum_motor_pwm(int32 pwmFront, int32 pwmBack);
 void stop_momentum_motor(void);
 
-#endif
+#endif /* _MOTOR_H_ */

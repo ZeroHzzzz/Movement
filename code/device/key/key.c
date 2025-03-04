@@ -1,5 +1,4 @@
 #include "key.h"
-#include "zf_common_headfile.h"
 
 KEY_MSG_t keymsg = {KEY_B, KEY_UP};
 gpio_pin_enum KEY_PTxn[KEY_MAX] = {P13_2, P13_1, P13_3, P14_6, P11_2};

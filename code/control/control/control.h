@@ -3,14 +3,41 @@
 
 #include "zf_common_headfile.h"
 
-typedef struct {
+#define pidCoefficient 100
+#define CONTROL_LAW_CONSTRAINT 0.28f  // simple trace
+
+struct Control_Turn_Manual_Params {
     float buckling_turn_coefficient;  // 屈曲转动系数，这里存放的是已经被除过的
     uint32 buckling_front_coefficientV;  // 前部屈曲系数V
     uint32 buckling_front_coefficientT;  // 前部屈曲系数T
     uint32 turn_gain_coefficient;        // 转弯增益系数
-} Control_Turn_Manual_Params;
+    int32 turnCurvature;                 // 转弯曲率
+};
 
-typedef struct {
+struct Control_Motion_Manual_Parmas {
+    // 这是底轮速度
+    int32 bottom_velocity;
+    // PID
+    uint32 bottom_velocity_parameter[3];
+    uint32 bottom_angle_velocity_parameter[3];
+    uint32 bottom_angle_parameter[3];
+
+    uint32 side_angle_velocity_parameter[3];
+    uint32 side_angle_parameter[3];
+    uint32 side_velocity_parameter[3];
+
+    uint32 turn_angle_parameter[3];
+    uint32 turn_velocity_parameter[3];
+};
+
+struct Control_Time {
+    // 串级pid各个环的时间，时间由长到短，由外到内
+    uint32 turn[2];
+    uint32 bottom[3];
+    uint32 side[3];
+};
+
+struct Control_Target {
     // 控制目标状态
 
     // front side
@@ -26,9 +53,9 @@ typedef struct {
     float Fbucking;  // front balance bucking
     float turnAngle;
     float turnAngleVelocity;
-} Control_Target;
+};
 
-typedef struct {
+struct Control_Flag {
     // 控制更新标志
     uint8_t frontAngle;
     uint8_t frontAngleVelocity;
@@ -52,12 +79,29 @@ typedef struct {
 
     uint8 turnAngleCount;
     uint8 turnAngleDiffVelocityCount;
+};
 
-} Control_Flag;
+struct EulerAngle;
+struct Velocity_Motor;
+struct EulerAngle;
+struct Menu_Manual_Param;
 
 extern uint8 g_turn_start_flag;
-extern Control_Turn_Manual_Params g_turn_manual_params;
-extern Control_Target g_control_target;
-extern Control_Flag g_control_flag;
+extern struct Control_Turn_Manual_Params g_turn_manual_params;
+extern struct Control_Target g_control_target;
+extern struct Control_Flag g_control_flag;
 
+void control_bottom_balance(struct Control_Target* control_target,
+                            struct Control_Flag* control_flag,
+                            struct Velocity_Motor* vel_motor,
+                            struct EulerAngle* euler_angle_bias);
+void control_side_balance(struct Control_Target* control_target,
+                          struct Control_Flag* control_flag,
+                          struct Velocity_Motor* vel_motor,
+                          struct EulerAngle* euler_angle_bias);
+
+void control_turn_balance();
+void control_manual_param_init();
+void control_shutdown(struct Control_Target* control_target,
+                      struct EulerAngle* euler_angle_bias);
 #endif

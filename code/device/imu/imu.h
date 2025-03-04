@@ -1,6 +1,8 @@
 #ifndef _IMU_H_
 #define _IMU_H_
 
+#include "zf_common_headfile.h"
+
 #define GravityAcc 9.7936f
 #define cheat_define 0.0016f
 #define gyroscope_threshold 5

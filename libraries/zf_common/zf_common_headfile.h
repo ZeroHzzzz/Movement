@@ -128,8 +128,14 @@
 // device
 #include "imu.h"
 #include "key.h"
+#include "lcd.h"
 #include "motor.h"
 #include "system.h"
+
+//
+// #include "Attitude.h"
+// #include "control.h"
+// #include "velocity.h"
 
 //=====================================================用户层=======================================================
 #endif
