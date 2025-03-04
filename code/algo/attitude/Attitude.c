@@ -1,4 +1,4 @@
-#include "Attitude.h"
+#include "attitude.h"
 #include "QuaternionEKF.h"
 #include "control.h"
 #include "velocity.h"

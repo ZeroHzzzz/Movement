@@ -3,8 +3,10 @@
 
 #include "zf_common_headfile.h"
 
-#define DEFAULT_PEN_COLOR RGB565_WHITE
-#define DEFAULT_BACKGROUND_COLOR RGB565_PINK
+#define DEFAULT_PEN_COLOR RGB565_MAGENTA
+#define DEFAULT_BACKGROUND_COLOR RGB565_WHITE
+#define CHAR_WIDTH 8
+#define CHAR_HEIGTH 16
 
 void lcd_init(void);
 void lcd_clear(void);

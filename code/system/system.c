@@ -1,33 +1,49 @@
 #include "system.h"
-#include "Attitude.h"
+#include "attitude.h"
 #include "control.h"
+#include "lcd.h"
+#include "small_driver_uart_control.h"
 #include "velocity.h"
 #include "zf_common_headfile.h"
 
 void system_init() {
     // init lcd
-    tft180_set_dir(TFT180_CROSSWISE);
-    tft180_init();
+    lcd_init();
 
     // init key
     key_init_rewrite(KEY_MAX);
     pit_ms_init(CCU60_CH1, 4);
+
+    // init small driver uart
+    small_driver_uart_init();
 
     // init motor
     motor_init();
 
     // init encoder
     encoder_init();
+
+    // menu_param
+    menu_manual_param_init();
+    // menu
+    MainMenu_Set();
+
+    // control init
+    control_init();
 }
 
-void system_attitude_timer() {
+void system_attitude_timer(
+    struct Control_Turn_Manual_Params* control_turn_params,
+    struct Control_Target* control_target,
+    struct Velocity_Motor* vel_motor,
+    struct EulerAngle* euler_angle) {
     static uint8 imuCnt = 0;
     imuCnt++;
     if (imuCnt >= 2) {
         imuCnt = 0;
         g_attitude_cal_flag = 1;
-        attitude_cal_amend(&g_turn_manual_params, &g_control_target,
-                           &g_vel_motor, &g_euler_angle);
+        attitude_cal_amend(control_turn_params, control_target, vel_motor,
+                           euler_angle);
     } else {
         g_attitude_cal_flag = 0;
     }
@@ -71,6 +87,7 @@ void bottom_control_timer(struct Control_Time* control_time,
 void side_control_timer(struct Control_Time* control_time,
                         struct Control_Flag* control_flag,
                         struct Control_Target* control_target,
+                        struct Control_Turn_Manual_Params* control_turn_params,
                         struct Velocity_Motor* vel_motor,
                         struct EulerAngle* euler_angle_bias) {
     uint32 sideAngleTime = control_time->side[0];
@@ -97,8 +114,8 @@ void side_control_timer(struct Control_Time* control_time,
     } else {
         control_flag->sideAngleVelocity = 0;
     }
-    control_side_balance(control_target, control_flag, vel_motor,
-                         euler_angle_bias);
+    control_side_balance(control_target, control_flag, control_turn_params,
+                         vel_motor, euler_angle_bias);
 }
 
 void turn_control_timer(struct Control_Time* control_time,

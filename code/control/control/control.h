@@ -87,21 +87,23 @@ struct EulerAngle;
 struct Menu_Manual_Param;
 
 extern uint8 g_turn_start_flag;
-extern struct Control_Turn_Manual_Params g_turn_manual_params;
+extern struct Control_Turn_Manual_Params g_control_turn_manual_params;
 extern struct Control_Target g_control_target;
 extern struct Control_Flag g_control_flag;
 
+void control_manual_param_init();
 void control_bottom_balance(struct Control_Target* control_target,
                             struct Control_Flag* control_flag,
                             struct Velocity_Motor* vel_motor,
                             struct EulerAngle* euler_angle_bias);
-void control_side_balance(struct Control_Target* control_target,
-                          struct Control_Flag* control_flag,
-                          struct Velocity_Motor* vel_motor,
-                          struct EulerAngle* euler_angle_bias);
+void control_side_balance(
+    struct Control_Target* control_target,
+    struct Control_Flag* control_flag,
+    struct Control_Turn_Manual_Params* control_turn_params,
+    struct Velocity_Motor* vel_motor,
+    struct EulerAngle* euler_angle_bias);
 
 void control_turn_balance();
-void control_manual_param_init();
 void control_shutdown(struct Control_Target* control_target,
                       struct EulerAngle* euler_angle_bias);
 #endif

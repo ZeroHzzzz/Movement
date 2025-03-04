@@ -1,5 +1,5 @@
 #include "velocity.h"
-#include "Attitude.h"
+#include "attitude.h"
 #include "kalman_filter_velocity.h"
 
 #define VELOCITY_KALMAN_FILTER

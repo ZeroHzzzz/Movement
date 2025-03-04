@@ -1,7 +1,7 @@
 #ifndef _MENU_INPUT_H_
 #define _MENU_INPUT_H_
 
-#include "Attitude.h"
+#include "attitude.h"
 #include "zf_common_headfile.h"
 
 struct Menu_Manual_Param {
@@ -41,5 +41,5 @@ struct Control_Motion_Manual_Parmas;
 
 void menu_manual_param_init();
 
-// extern struct Menu_Manual_Param g_menu_manual_param;
+extern struct Menu_Manual_Param g_menu_manual_param;
 #endif

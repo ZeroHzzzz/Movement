@@ -1,4 +1,5 @@
 #include "encoder.h"
+#include "small_driver_uart_control.h"
 #include "velocity.h"
 #include "zf_common_headfile.h"
 
@@ -25,13 +26,6 @@ static void pass_bottom_encoder(int32 value, struct Velocity_Motor* vel_motor) {
 void encoder_init() {
     // bottom encoder
     encoder_dir_init(ENCODER_BOTTOM, ENCODER_PIN0_BOTTOM, ENCODER_PIN1_BOTTOM);
-    // momentum encoder
-    // front momentum encoder
-    encoder_dir_init(MOMENTUM_ENCODER_FRONT, ENCODER_PIN0_FRONT,
-                     ENCODER_PIN1_FRONT);
-    // back momentum encoder
-    encoder_dir_init(MOMENTUM_ENCODER_BACK, ENCODER_PIN0_BACK,
-                     ENCODER_PIN1_BACK);
 }
 
 void get_momentum_encoder(struct Velocity_Motor* vel_motor) {
@@ -41,14 +35,16 @@ void get_momentum_encoder(struct Velocity_Motor* vel_motor) {
     frontEncoder[1] = frontEncoder[0];
     backEncoder[2] = backEncoder[1];
     backEncoder[1] = backEncoder[0];
-    int32 frontEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_FRONT);
-    int32 backEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_BACK);
+    // int32 frontEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_FRONT);
+    // int32 backEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_BACK);
+    int32 frontEncoderTemp = motor_value.receive_left_speed_data;
+    int32 backEncoderTemp = motor_value.receive_right_speed_data;
     // {
     //     tft180_show_int(0,20,frontEncoderTemp,3);
     //     tft180_show_int(0,40,backEncoderTemp,3);
     // }
-    encoder_clear_count(MOMENTUM_ENCODER_FRONT);
-    encoder_clear_count(MOMENTUM_ENCODER_BACK);
+    // encoder_clear_count(MOMENTUM_ENCODER_FRONT);
+    // encoder_clear_count(MOMENTUM_ENCODER_BACK);
     // lowPass filter
     pass_momentum_encoder(frontEncoderTemp, backEncoderTemp, vel_motor);
     // frontEncoder[0] = (int32)(0.879*(float)frontEncoderTemp +/tvfg5rf

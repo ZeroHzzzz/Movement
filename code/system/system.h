@@ -30,11 +30,16 @@
 struct Control_Time;
 struct Control_Flag;
 struct Control_Target;
+struct Control_Turn_Manual_Params;
 struct Velocity_Motor;
 struct EulerAngle;
 
 void system_init();
-void system_attitude_timer();
+void system_attitude_timer(
+    struct Control_Turn_Manual_Params* control_turn_params,
+    struct Control_Target* control_target,
+    struct Velocity_Motor* vel_motor,
+    struct EulerAngle* euler_angle);
 void bottom_control_timer(struct Control_Time* control_time,
                           struct Control_Flag* control_flag,
                           struct Control_Target* control_target,
@@ -43,6 +48,7 @@ void bottom_control_timer(struct Control_Time* control_time,
 void side_control_timer(struct Control_Time* control_time,
                         struct Control_Flag* control_flag,
                         struct Control_Target* control_target,
+                        struct Control_Turn_Manual_Params* control_turn_params,
                         struct Velocity_Motor* vel_motor,
                         struct EulerAngle* euler_angle_bias);
 void turn_control_timer(struct Control_Time* control_time,

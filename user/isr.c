@@ -35,8 +35,11 @@
  ********************************************************************************************************************/
 
 #include "isr.h"
+#include "attitude.h"
+#include "control.h"
 #include "isr_config.h"
-
+#include "system.h"
+#include "velocity.h"
 // 对于TC系列默认是不支持中断嵌套的，希望支持中断嵌套需要在中断内使用
 // interrupt_global_enable(0); 来开启中断嵌套
 // 简单点说实际上进入中断后TC系列的硬件自动调用了 interrupt_global_disable();
@@ -49,6 +52,8 @@ IFX_INTERRUPT(cc60_pit_ch0_isr,
               CCU6_0_CH0_ISR_PRIORITY) {
     interrupt_global_enable(0);  // 开启中断嵌套
     pit_clear_flag(CCU60_CH0);
+
+    velocity_update(&g_vel_motor);
 }
 
 IFX_INTERRUPT(cc60_pit_ch1_isr,
@@ -74,6 +79,9 @@ IFX_INTERRUPT(cc61_pit_ch1_isr,
               CCU6_1_CH1_ISR_PRIORITY) {
     interrupt_global_enable(0);  // 开启中断嵌套
     pit_clear_flag(CCU61_CH1);
+
+    system_attitude_timer(&g_control_turn_manual_params, &g_control_target,
+                          &g_vel_motor, &g_euler_angle);
 }
 // **************************** PIT中断函数 ****************************
 
@@ -188,7 +196,8 @@ IFX_INTERRUPT(uart3_tx_isr, UART3_INT_VECTAB_NUM, UART3_TX_INT_PRIO) {
 
 IFX_INTERRUPT(uart3_rx_isr, UART3_INT_VECTAB_NUM, UART3_RX_INT_PRIO) {
     interrupt_global_enable(0);  // 开启中断嵌套
-    gnss_uart_callback();        // GNSS串口回调函数
+    // gnss_uart_callback();        // GNSS串口回调函数
+    uart_control_callback();  // 无刷驱动串口回调函数
 }
 
 IFX_INTERRUPT(uart4_tx_isr, UART4_INT_VECTAB_NUM, UART4_TX_INT_PRIO) {

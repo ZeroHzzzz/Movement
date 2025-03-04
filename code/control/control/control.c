@@ -6,7 +6,7 @@
 #include "zf_common_headfile.h"
 
 uint8 g_turn_start_flag = 0;
-struct Control_Turn_Manual_Params g_turn_manual_params;
+struct Control_Turn_Manual_Params g_control_turn_manual_params;
 struct Control_Target g_control_target;
 struct Control_Flag g_control_flag;
 
@@ -32,8 +32,10 @@ static void control_bottom_angle_velocity(
     struct Control_Target* control_target);
 
 // side
-static void control_side_velocity(struct Velocity_Motor* vel_motor,
-                                  struct Control_Target* control_target);
+static void control_side_velocity(
+    struct Velocity_Motor* vel_motor,
+    struct Control_Target* control_target,
+    struct Control_Turn_Manual_Params* control_turn_params);
 static void control_side_angle(struct EulerAngle* euler_angle_bias,
                                struct Control_Target* control_target);
 static void control_side_angle_velocity(struct Control_Target* control_target);
@@ -153,10 +155,12 @@ static void control_bottom_angle_velocity(
     // + frontFeedforward();
 }
 
-void control_side_balance(struct Control_Target* control_target,
-                          struct Control_Flag* control_flag,
-                          struct Velocity_Motor* vel_motor,
-                          struct EulerAngle* euler_angle_bias) {
+void control_side_balance(
+    struct Control_Target* control_target,
+    struct Control_Flag* control_flag,
+    struct Control_Turn_Manual_Params* control_turn_params,
+    struct Velocity_Motor* vel_motor,
+    struct EulerAngle* euler_angle_bias) {
     if (control_flag->sideAngleVelocity) {
         control_flag->sideAngleVelocity = 0;
         control_side_angle_velocity(control_target);
@@ -167,7 +171,7 @@ void control_side_balance(struct Control_Target* control_target,
     }
     if (control_flag->sideVelocity) {
         control_flag->sideVelocity = 0;
-        control_side_velocity(vel_motor, control_target);
+        control_side_velocity(vel_motor, control_target, control_turn_params);
     }
     // turnControl();
     int32 left_motor_duty, right_motor_duty;
@@ -185,10 +189,12 @@ void control_side_balance(struct Control_Target* control_target,
     // set momentum motor pwm to keep side balance
 }
 
-static void control_side_velocity(struct Velocity_Motor* vel_motor,
-                                  struct Control_Target* control_target) {
+static void control_side_velocity(
+    struct Velocity_Motor* vel_motor,
+    struct Control_Target* control_target,
+    struct Control_Turn_Manual_Params* control_turn_params) {
     float alpha =
-        fabsf(g_turn_manual_params.turnCurvature / CONTROL_LAW_CONSTRAINT);
+        fabsf(control_turn_params->turnCurvature / CONTROL_LAW_CONSTRAINT);
     static float momentumVelocityFilter[3] = {0};
     momentumVelocityFilter[0] =
         (float)(vel_motor->momentumFront - vel_motor->momentumBack);
