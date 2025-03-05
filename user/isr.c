@@ -67,8 +67,8 @@ IFX_INTERRUPT(cc60_pit_ch1_isr,
     key_IRQHandler();
 
     // TODO: check if it works
-    // while (key_get_msg(&keymsg))
-    //     ;
+    while (key_get_msg(&keymsg))
+        ;
 }
 
 IFX_INTERRUPT(cc61_pit_ch0_isr,
