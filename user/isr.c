@@ -38,6 +38,7 @@
 #include "attitude.h"
 #include "control.h"
 #include "isr_config.h"
+#include "key.h"
 #include "menu.h"
 #include "system.h"
 #include "velocity.h"
