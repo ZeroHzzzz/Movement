@@ -207,28 +207,18 @@ MENU_TABLE Buckling[] = {
 };
 
 MENU_TABLE Calibration_MenuTable[] = {
+    {(uint8*)"pitch",
+     {.INT32 = (int32*)&g_menu_manual_param.mechanicalPitchAngle},
+     Param_Int,
+     {.ItemFunc = Menu_Null}},
+    {(uint8*)"roll",
+     {.INT32 = (int32*)&g_menu_manual_param.mechanicalRollAngle},
+     Param_Int,
+     {.ItemFunc = Menu_Null}},
     {(uint8*)"yaw",
      {.INT32 = (int32*)&g_menu_manual_param.mechanicalYawAngle},
      Param_Int,
      {.ItemFunc = Menu_Null}},
-    {(uint8*)"roll_f",
-     {.INT32 = (int32*)&g_menu_manual_param.mechanicalRollAngle},
-     Param_Int,
-     {.ItemFunc = Menu_Null}},
-    {(uint8*)"pitch_s",
-     {.INT32 = (int32*)&g_menu_manual_param.mechanicalPitchAngle},
-     Param_Int,
-     {.ItemFunc = Menu_Null}},
-    // {(uint8 *)"stanleyk", {.UINT32 =(uint32*)&stanleyk }, Param_Uint,
-    // {.ItemFunc = Menu_Null}},
-    // {(uint8*)"testdeadzone",
-    //  {.SubMenu = Table_Null},
-    //  Functions,
-    //  {.ItemFunc = testDeadZone}},
-    // {(uint8*)"deadzone",
-    //  {.UINT32 = (uint32*)&bottomMotorDeadZone},
-    //  Param_Uint,
-    //  {.ItemFunc = Menu_Null}},
 };
 
 MENU_TABLE Test_MenuTable[] = {
