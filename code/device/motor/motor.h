@@ -6,8 +6,9 @@
 #define MOTOR_HZ 12500
 #define MOTOR_HZ_RANGE 1000
 
-#define MOTOR_BOTTOM ATOM0_CH0_P21_2  // ATOM1_CH0_P21_2
-#define DIR_BOTTOM P21_4
+#define MOTOR_BOTTOM ATOM0_CH2_P21_4  // ATOM1_CH0_P21_2
+#define DIR_BOTTOM P21_2
+
 //===========================================limit==================================================
 #define MOMENTUM_MOTOR_PWM_MAX 9999
 #define MOMENTUM_MOTOR_PWM_MIN -9999

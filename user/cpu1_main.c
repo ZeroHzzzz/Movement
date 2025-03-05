@@ -48,8 +48,6 @@ void core1_main(void) {
     interrupt_global_enable(0);  // 打开全局中断
     // 此处编写用户代码 例如外设初始化代码等
 
-    uart_init(UART_2, 115200, UART2_TX_P10_5, UART2_RX_P10_6);
-
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();  // 等待所有核心初始化完毕
     while (TRUE) {

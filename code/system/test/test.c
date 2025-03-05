@@ -10,32 +10,17 @@ void test_bottom_motor() {
     lcd_clear();
     lcd_show_string(0, 0, "KEY_U: forward");
     lcd_show_string(0, 1, "KEY_D: backward");
-    lcd_show_string(0, 2, "KEY_B: pwm++");
-    lcd_show_string(0, 3, "KEY_R: pwm--");
     lcd_show_string(0, 4, "Press KEY_L to exit");
-    uint32 pwm = 1000;
     while (keymsg.key != KEY_L) {
         if (keymsg.key == KEY_U)  // 向前
         {
             gpio_set_level(DIR_BOTTOM, 1);
-            pwm_set_duty(MOTOR_BOTTOM, pwm);
+            pwm_set_duty(MOTOR_BOTTOM, 1000);
         }
         if (keymsg.key == KEY_D)  // 向后
         {
             gpio_set_level(DIR_BOTTOM, 0);
-            pwm_set_duty(MOTOR_BOTTOM, pwm);
-        }
-        if (keymsg.key == KEY_B)  // 加速
-        {
-            if (pwm < PWM_DUTY_MAX) {
-                pwm += 100;
-            }
-        }
-        if (keymsg.key == KEY_R)  // 减速
-        {
-            if (pwm > 0) {
-                pwm -= 100;
-            }
+            pwm_set_duty(MOTOR_BOTTOM, 1000);
         }
         lcd_show_string(0, 5, "Now Speed:");
         lcd_show_int(0, 6, encoder_get_count(ENCODER_BOTTOM), 3);
