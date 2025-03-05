@@ -50,6 +50,9 @@ void system_init() {
     printf("attitude_init\n");
     pit_ms_init(CCU61_CH1, 1);
 
+    // read eeprom
+    Read_EEPROM();
+
     // menu
     MainMenu_Set();
 

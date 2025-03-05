@@ -78,7 +78,9 @@ IFX_INTERRUPT(cc61_pit_ch0_isr,
     interrupt_global_enable(0);  // 开启中断嵌套
     pit_clear_flag(CCU61_CH0);
 
+    // printf("exit_menu_flag: %d\n", g_exit_menu_flag);
     if (g_exit_menu_flag) {
+        // printf("runState: %d\n", runState);
         if (runState == CAR_STABLE) {
             static uint16 count = 0;
             count++;

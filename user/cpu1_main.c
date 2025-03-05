@@ -34,7 +34,11 @@
  * 2022-11-03       pudding            first version
  ********************************************************************************************************************/
 
+#include "attitude.h"
+#include "menu.h"
+#include "system.h"
 #include "zf_common_headfile.h"
+
 #pragma section all "cpu1_dsram"
 // 将本语句与#pragma section all restore语句之间的全局变量都放在CPU1的RAM中
 
@@ -48,11 +52,15 @@ void core1_main(void) {
     interrupt_global_enable(0);  // 打开全局中断
     // 此处编写用户代码 例如外设初始化代码等
 
+    system_init();
+    runState = CAR_READY;
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();  // 等待所有核心初始化完毕
+    g_exit_menu_flag = 1;
+    runState = CAR_STABLE;
     while (TRUE) {
         // 此处编写需要循环执行的代码
-
+        printf("%f, %f, %f\n", currentFrontAngle, currentSideAngle, yawAngle);
         // 此处编写需要循环执行的代码
     }
 }

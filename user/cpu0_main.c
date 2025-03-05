@@ -48,13 +48,14 @@ int core0_main(void) {
     clock_init();  // 获取时钟频率<务必保留>
     debug_init();  // 初始化默认调试串口
 
-    system_init();
-    runState = CAR_READY;
+    motor_init();
+    // system_init();
+    // runState = CAR_READY;
 
     cpu_wait_event_ready();  // 等待所有核心初始化完毕
 
-    g_exit_menu_flag = 1;
-    runState = CAR_STABLE;
+    // g_exit_menu_flag = 1;
+    // runState = CAR_STABLE;
     while (TRUE) {
         // 此处编写需要循环执行的代码
         // 此处编写需要循环执行的代码

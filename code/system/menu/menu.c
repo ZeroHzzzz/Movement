@@ -698,6 +698,45 @@ void read_Flash(uint8 flashNum) {
     lcd_show_string(0, 0, "READ IS OK!");
 }
 
-void Write_EEPROM(void) {}
+void Read_EEPROM() {
+    lcd_clear();
+    lcd_show_string(0, 0, "READ EEPROM");
+    const uint16 Flash_Save_uintNum =
+        sizeof(EEPROM_DATA_UINT) / sizeof(EEPROM_DATA_UINT[0]);
+    const uint16 Flash_Save_intNum =
+        sizeof(EEPROM_DATA_INT) / sizeof(EEPROM_DATA_INT[0]);
+    flash_buffer_clear();              // 清除缓存
+    flash_read_page_to_buffer(0, 11);  // 将数据从缓存区读出来
+    for (uint16 i = 0; i < Flash_Save_uintNum; i++) {
+        uint32 temp_vaule = flash_union_buffer[i].uint32_type;
+        *EEPROM_DATA_UINT[i] = temp_vaule;
+    }
+    for (uint16 i = 0; i < Flash_Save_intNum; i++) {
+        int32 temp_vaule =
+            flash_union_buffer[Flash_Save_uintNum + i].int32_type;
+        *EEPROM_DATA_INT[i] = temp_vaule;
+    }
+    flash_buffer_clear();  // 清除缓存
+    lcd_clear();
+    lcd_show_string(0, 0, "READ SUCCESS");
+}
 
-void Read_EEPROM(void) {}
+void Write_EEPROM() {
+    lcd_clear();
+    lcd_show_string(0, 0, "WRITE EEPROM");
+    const uint16 Flash_Save_uintNum =
+        sizeof(EEPROM_DATA_UINT) / sizeof(EEPROM_DATA_UINT[0]);
+    const uint16 Flash_Save_intNum =
+        sizeof(EEPROM_DATA_INT) / sizeof(EEPROM_DATA_INT[0]);
+    flash_erase_page(0, 11);
+    flash_buffer_clear();  // 清除缓存
+    for (uint16 i = 0; i < Flash_Save_uintNum; i++)
+        flash_union_buffer[i].uint32_type = (uint32)*EEPROM_DATA_UINT[i];
+    for (uint16 i = 0; i < Flash_Save_intNum; i++)
+        flash_union_buffer[i + Flash_Save_uintNum].int32_type =
+            (int32)*EEPROM_DATA_INT[i];
+    flash_write_page_from_buffer(0, 11);
+    flash_buffer_clear();  // 清除缓存
+    lcd_clear();
+    lcd_show_string(0, 0, "WRITE SUCCESS");
+}
