@@ -17,6 +17,13 @@ void system_init() {
     key_init_rewrite(KEY_MAX);
     pit_ms_init(CCU60_CH1, 4);
 
+    // init imu
+    imu_init();
+
+    // init attitude
+    attitu_init();
+    pit_ms_init(CCU61_CH1, 1);
+
     // init small driver uart
     small_driver_uart_init();
 
@@ -28,10 +35,11 @@ void system_init() {
 
     // menu_param
     menu_manual_param_init();
-
     control_manual_param_init();
 
+    // velocity
     velocity_init(&g_vel_motor);
+    pit_ms_init(CCU60_CH0, 1);
 
     // menu
     MainMenu_Set();
@@ -42,6 +50,9 @@ void system_init() {
 
     // control init
     control_init(&g_control_motion_params);
+
+    // start to balance
+    pit_ms_init(CCU61_CH0, 1);
 }
 
 void system_attitude_timer(
