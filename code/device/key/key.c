@@ -1,13 +1,25 @@
 #include "key.h"
 
-KEY_MSG_t keymsg = {KEY_B, KEY_UP};
 gpio_pin_enum KEY_PTxn[KEY_MAX] = {P13_2, P13_1, P13_3, P14_6, P11_2};
 
-KEY_MSG_t key_msg[KEY_MSG_FIFO_SIZE];
-volatile uint8 key_msg_front = 0, key_msg_rear = 0;
-volatile uint8 key_msg_flag = KEY_MSG_EMPTY;
+KEY_QUEUE key_msg_queue = {{0}, 0, 0, KEY_MSG_EMPTY};
+volatile KEY_MSG g_key_msg;
 
-void key_init_rewrite(KEY_e key) {
+static KEY_STATUS key_get_status(KEY_TYPE key) {
+    return gpio_get_level(KEY_PTxn[key]) == KEY_DOWN ? KEY_DOWN : KEY_UP;
+}
+
+static KEY_STATUS key_check_status(KEY_TYPE key) {
+    if (key_get_status(key) == KEY_DOWN) {
+        system_delay_ms(14);
+        if (key_get_status(key) == KEY_DOWN) {
+            return KEY_DOWN;
+        }
+    }
+    return KEY_UP;
+}
+
+void key_init_rewrite(KEY_TYPE key) {
     if (key < KEY_MAX) {
         gpio_init(KEY_PTxn[key], GPI, 0, GPO_PUSH_PULL);
     } else {
@@ -16,99 +28,64 @@ void key_init_rewrite(KEY_e key) {
             gpio_init(KEY_PTxn[key], GPI, 0, GPO_PUSH_PULL);
         }
     }
+
+    // init key queue
+    key_queue_init(&key_msg_queue);
 }
 
-KEY_STATUS_e key_get_status(KEY_e key) {
-    if (gpio_get_level(KEY_PTxn[key]) == KEY_DOWN) {
-        return KEY_DOWN;
-    }
-    return KEY_UP;
+void key_queue_init(KEY_QUEUE* q) {
+    q->front = q->rear = 0;
+    q->status = KEY_MSG_EMPTY;
 }
 
-KEY_STATUS_e key_check_status(KEY_e key) {
-    if (key_get_status(key) == KEY_DOWN) {
-        system_delay_ms(10);
-        if (key_get_status(key) == KEY_DOWN) {
-            return KEY_DOWN;
-        }
-    }
-    return KEY_UP;
-}
-
-uint8 key_get_msg(KEY_MSG_t* keymsg) {
-    uint8 tmp;
-
-    if (key_msg_flag == KEY_MSG_EMPTY) {
+uint8 key_enqueue(KEY_QUEUE* q, KEY_MSG msg) {
+    if (q->status == KEY_MSG_FULL)
         return 0;
-    }
-
-    keymsg->key = key_msg[key_msg_front].key;
-    keymsg->status = key_msg[key_msg_front].status;
-
-    key_msg_front++;
-
-    if (key_msg_front >= KEY_MSG_FIFO_SIZE) {
-        key_msg_front = 0;
-    }
-    tmp = key_msg_rear;
-    if (key_msg_front == tmp) {
-        key_msg_flag = KEY_MSG_EMPTY;
-    } else {
-        key_msg_flag = KEY_MSG_NORMAL;
-    }
-
+    q->buffer[q->rear] = msg;
+    q->rear = (q->rear + 1) % KEY_MSG_FIFO_SIZE;
+    q->status = (q->front == q->rear) ? KEY_MSG_FULL : KEY_MSG_NORMAL;
     return 1;
 }
 
-void key_send_msg(KEY_MSG_t keymsg) {
-    uint8 tmp;
-
-    if (key_msg_flag == KEY_MSG_FULL) {
-        return;
-    }
-    key_msg[key_msg_rear].key = keymsg.key;
-    key_msg[key_msg_rear].status = keymsg.status;
-
-    key_msg_rear++;
-
-    if (key_msg_rear >= KEY_MSG_FIFO_SIZE) {
-        key_msg_rear = 0;
-    }
-
-    tmp = key_msg_rear;
-    if (tmp == key_msg_front) {
-        key_msg_flag = KEY_MSG_FULL;
-    } else {
-        key_msg_flag = KEY_MSG_NORMAL;
-    }
+uint8 key_dequeue(KEY_QUEUE* q, KEY_MSG* msg) {
+    if (q->status == KEY_MSG_EMPTY)
+        return 0;
+    *msg = q->buffer[q->front];
+    q->front = (q->front + 1) % KEY_MSG_FIFO_SIZE;
+    q->status = (q->front == q->rear) ? KEY_MSG_EMPTY : KEY_MSG_NORMAL;
+    return 1;
 }
 
-void key_IRQHandler(void) {
-    KEY_e keynum;
-    static uint8 keytime[KEY_MAX] = {0};
-    KEY_MSG_t keymsg;
-    for (keynum = (KEY_e)0; keynum < KEY_MAX; keynum++) {
-        if (key_get_status(keynum) == KEY_DOWN) {
+void key_listener() {
+    for (KEY_TYPE keynum = 0; keynum < KEY_MAX; keynum++) {
+        static uint8 keytime[KEY_MAX] = {0};
+        KEY_STATUS status = key_check_status(keynum);
+        if (status == KEY_DOWN) {
             keytime[keynum]++;
-            if (keytime[keynum] <= KEY_DOWN_TIME) {
-                continue;
-            } else if (keytime[keynum] <= KEY_HOLD_TIME) {
-                keymsg.key = keynum;
-                keymsg.status = KEY_DOWN;
-                key_send_msg(keymsg);
+            if (keytime[keynum] > KEY_DOWN_TIME) {
+                KEY_MSG msg = {keynum, KEY_DOWN};
+                key_enqueue(&key_msg_queue, msg);
             }
-            //  else {
-            //     keymsg.key = keynum;
-            //     keymsg.status = KEY_HOLD;
-            //     send_key_msg(keymsg);
-            // }
         } else {
             if (keytime[keynum] > KEY_DOWN_TIME) {
-                keymsg.key = keynum;
-                keymsg.status = KEY_UP;
-                key_send_msg(keymsg);
+                KEY_MSG msg = {keynum, KEY_UP};
+                key_enqueue(&key_msg_queue, msg);
             }
             keytime[keynum] = 0;
         }
     }
+}
+
+void key_update() {
+    key_dequeue(&key_msg_queue, &g_key_msg);
+}
+
+KEY_TYPE key_await() {
+    // 感觉这么写才对，等待过程中应该出队，因为中断会定时入队
+    // 同时不能忙等待，否则阻塞主进程的，key_msg不能更新
+    while (g_key_msg.status == KEY_UP) {
+        key_update();
+    }
+    g_key_msg.status = KEY_UP;
+    return g_key_msg.key;
 }

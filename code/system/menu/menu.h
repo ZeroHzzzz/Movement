@@ -32,7 +32,7 @@ union MenuParam {
 };
 
 struct MENU_TABLE {
-    uint8* MenuName;             // 菜单项目名称
+    const char* MenuName;        // 菜单项目名称
     union MenuParam MenuParams;  // 要调试的参数和子菜单 地址
     enum MenuType MenuType;      // 此菜单任务类型
     union Item ItemHook;  // 附加参数 同时运行的函数 枚举变量名称 子菜单项数
@@ -64,7 +64,7 @@ void Write_EEPROM(void);
 
 // void MainMenu_Set();
 // uint8 Menu_Move();
-// KEY_e KeySan(void);
+// KEY_TYPE KeySan(void);
 // void SubNameCat(uint8* SubMenuName, uint8* TableMenuName);
 // void adjustParam(Site_t site, MENU_TABLE* table, uint16 Color, uint16
 // bkColor); void Menu_Display(MENU_TABLE* menuTable,

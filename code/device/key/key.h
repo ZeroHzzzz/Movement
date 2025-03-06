@@ -4,7 +4,7 @@
 #include "zf_common_headfile.h"
 
 #define KEY_DOWN_TIME 10
-#define KEY_HOLD_TIME 11
+#define KEY_HOLD_TIME 50
 
 #define KEY_MSG_FIFO_SIZE 20
 
@@ -15,34 +15,38 @@ typedef enum {
     KEY_R,
     KEY_B,
     KEY_MAX,
-} KEY_e;
+} KEY_TYPE;
 
 typedef enum {
     KEY_DOWN = 0,
     KEY_UP = 1,
-    KEY_HOLD,
-} KEY_STATUS_e;
-
-typedef struct {
-    KEY_e key;
-    KEY_STATUS_e status;
-} KEY_MSG_t;
+} KEY_STATUS;
 
 typedef enum {
     KEY_MSG_EMPTY,
     KEY_MSG_NORMAL,
     KEY_MSG_FULL,
-} key_msg_e;
+} KEY_QUEUE_STATUS;
 
-void key_init_rewrite(KEY_e key);
-KEY_STATUS_e key_get_status(KEY_e key);
-KEY_STATUS_e key_check_status(KEY_e key);
+typedef struct {
+    KEY_TYPE key;
+    KEY_STATUS status;
+} KEY_MSG;
 
-uint8 key_get_msg(KEY_MSG_t* keymsg);
-void key_send_msg(KEY_MSG_t keymsg);
+typedef struct {
+    KEY_MSG buffer[KEY_MSG_FIFO_SIZE];
+    volatile uint8 front, rear;
+    volatile KEY_QUEUE_STATUS status;
+} KEY_QUEUE;
 
-void key_IRQHandler();
+void key_init_rewrite(KEY_TYPE key);
+void key_queue_init(KEY_QUEUE* q);
+uint8 key_enqueue(KEY_QUEUE* q, KEY_MSG msg);
+uint8 key_dequeue(KEY_QUEUE* q, KEY_MSG* msg);
+void key_listener();
+void key_update();
+KEY_TYPE key_await();
 
-extern KEY_MSG_t keymsg;
+extern volatile KEY_MSG g_key_msg;
 
-#endif /* _KEY_H_ */
+#endif

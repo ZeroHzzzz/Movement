@@ -33,6 +33,7 @@
  * 日期              作者                备注
  * 2022-11-03       pudding            first version
  ********************************************************************************************************************/
+#include "key.h"
 #include "menu.h"
 #include "zf_common_headfile.h"
 
@@ -58,6 +59,7 @@ int core0_main(void) {
     // runState = CAR_STABLE;
     while (TRUE) {
         // 此处编写需要循环执行的代码
+        key_update(&g_key_msg);
         // 此处编写需要循环执行的代码
     }
 }

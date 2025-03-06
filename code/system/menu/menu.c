@@ -16,7 +16,7 @@ typedef struct Site_t Site_t;
 #define Debug_Null NULL
 void Menu_Null(void) {}
 
-void Menu_Process(uint8* menuName,
+void Menu_Process(const char* menuName,
                   MENU_PRMT* prmt,
                   MENU_TABLE* table,
                   uint8 num);
@@ -275,7 +275,7 @@ void MainMenu_Set(void) {
     MENU_PRMT MainMenu_Prmt;
     uint8 menuNum =
         sizeof(MainMenu_Table) / sizeof(MainMenu_Table[0]);  // 菜单项数
-    Menu_Process((uint8*)" -=    Setting   =- ", &MainMenu_Prmt, MainMenu_Table,
+    Menu_Process(" -=    Setting   =- ", &MainMenu_Prmt, MainMenu_Table,
                  menuNum);
     Write_EEPROM();  // 将数据写入EEPROM保存
     lcd_clear();
@@ -303,7 +303,7 @@ void Menu_PrmtInit(MENU_PRMT* prmt, uint8 num, uint8 page) {
  * EntryParameter : prmt - 菜单参数, key - 按键值
  * ReturnValue    : 有确认返回0，否则返回1
  ******************************************************************************/
-uint8 Menu_Move(MENU_PRMT* prmt, KEY_e key) {
+uint8 Menu_Move(MENU_PRMT* prmt, KEY_TYPE key) {
     uint8 rValue = 1;
     switch (key) {
         case KEY_U:  // 向上
@@ -366,20 +366,7 @@ uint8 Menu_Move(MENU_PRMT* prmt, KEY_e key) {
     }
     return rValue;  // 返回执行索引
 }
-/******************************************************************************
- * FunctionName   : KeySan()
- * Description    : 按键获取
- * EntryParameter : None
- * ReturnValue    : 按键值
- *******************************************************************************/
-KEY_e KeySan(void) {
-    // while (keymsg.status == KEY_UP && !ExitMenu_flag)
-    //     ;
-    while (keymsg.status == KEY_UP)
-        ;
-    keymsg.status = KEY_UP;
-    return keymsg.key;
-}
+
 /******************************************************************************
  * FunctionName   : SubNameCat()
  * Description    : 生成子菜单标题
@@ -449,13 +436,13 @@ void SubNameCat(uint8* SubMenuName, uint8* TableMenuName) {
  *******************************************************************************/
 void adjustParam(Site_t site, MENU_TABLE* table) {
     do {
-        KeySan();
+        key_await();
         MenuParam param;
         if (table->MenuType == Param_Uint)
             param.UINT32 = table->MenuParams.UINT32;
         else
             param.INT32 = table->MenuParams.INT32;
-        switch (keymsg.key) {
+        switch (g_key_msg.key) {
             case KEY_U:
                 if (table->MenuType == Param_Uint)
                     (*param.UINT32)++;
@@ -518,7 +505,7 @@ void adjustParam(Site_t site, MENU_TABLE* table) {
                             (int8*)(table->ItemHook.EnumName +
                                     (*param.INT32) * (EnumNameLenth + 1)));
         }
-    } while (keymsg.key != KEY_B);
+    } while (g_key_msg.key != KEY_B);
 }
 
 /******************************************************************************
@@ -575,11 +562,11 @@ void Menu_Display(MENU_TABLE* menuTable,
  *- 菜单项数 ReturnValue    : None Describe
  *: 1.进入子菜单 2.调节参数 3.调节参数并执行 4.执行函数
  ******************************************************************************/
-void Menu_Process(uint8* menuName,
+void Menu_Process(const char* menuName,
                   MENU_PRMT* prmt,
                   MENU_TABLE* table,
                   uint8 num) {
-    KEY_e key;
+    KEY_TYPE key;
     Site_t site;
     uint8 page;  // 显示菜单需要的页数
     if (num - PAGE_DISP_NUM <= 0)
@@ -592,10 +579,10 @@ void Menu_Process(uint8* menuName,
     Menu_PrmtInit(prmt, num, page);
     do {
         lcd_clear();
-        lcd_show_string(0, 0, (const int8*)menuName);  // 显示菜单标题
+        lcd_show_string(0, 0, menuName);  // 显示菜单标题
         // 显示菜单项
         Menu_Display(table, prmt->PageNo, prmt->DispNum, prmt->Cursor);
-        key = KeySan();  // 获取按键
+        key = key_await();  // 获取按键
 
         if (Menu_Move(prmt, key) == 0)  // 菜单移动 按下确认键
         {
@@ -615,11 +602,10 @@ void Menu_Process(uint8* menuName,
                         site.x, site.y, *(table[prmt->Index].MenuParams.INT32),
                         6, DEFAULT_BACKGROUND_COLOR, DEFAULT_PEN_COLOR);
                 else if (table[prmt->Index].MenuType == Enumerate)
-                    lcd_show_string(
-                        site.x, site.y,
-                        (int8*)(table[prmt->Index].ItemHook.EnumName +
-                                (*(table[prmt->Index].MenuParams.INT32)) *
-                                    EnumNameLenth));
+                    lcd_show_string(site.x, site.y,
+                                    (table[prmt->Index].ItemHook.EnumName +
+                                     (*(table[prmt->Index].MenuParams.INT32)) *
+                                         EnumNameLenth));
                 // 在参数调节里看有无函数同时运行  可以同时执行
                 // 方便舵机调试，电机调试 这个在上面的调节参数函数里已经执行过
                 adjustParam(site, &table[prmt->Index]);
