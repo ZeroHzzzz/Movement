@@ -76,7 +76,7 @@ MENU_PRMT PID_Prmt;
 
 MENU_TABLE PID_Table[] = {
     {(uint8*)"FV",
-     {.INT32 = (int32*)&g_menu_manual_param.bottom_velocity_parameter},
+     {.INT32 = (int32*)&g_menu_manual_param.bottom_velocity},
      Param_Int,
      {.ItemFunc = Menu_Null}},
     {(uint8*)"FAV_kp",
@@ -230,6 +230,11 @@ MENU_TABLE Test_MenuTable[] = {
      {.SubMenu = Table_Null},
      Functions,
      {.ItemFunc = test_side_motor}},
+    {(uint8*)"Attitude",
+     {.SubMenu = Table_Null},
+     Functions,
+     {.ItemFunc = test_attitude}},
+    {(uint8*)"IMU", {.SubMenu = Table_Null}, Functions, {.ItemFunc = test_imu}},
 };
 
 MENU_TABLE MainMenu_Table[] = {
@@ -253,14 +258,7 @@ MENU_TABLE MainMenu_Table[] = {
      {.SubMenu = Test_MenuTable},
      Sub_Menus,
      {.SubMenuNum = MenuNum(Test_MenuTable)}},
-    // {(uint8*)"Key Test",
-    //  {.SubMenu = Table_Null},
-    //  Functions,
-    //  {.ItemFunc = KeyTest}},
-    // {(uint8*)"Attitude",
-    //  {.SubMenu = Table_Null},
-    //  Functions,
-    //  {.ItemFunc = ShowAttitude}},
+
 };
 
 /******************************************************************************

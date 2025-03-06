@@ -60,6 +60,18 @@ pid_type_def side_velocity_PID;
 pid_type_def turn_angle_PID;
 pid_type_def turn_angle_velocity_PID;
 
+int32 get_bottom_duty() {
+    return s_bottom_balance_duty;
+}
+
+int32 get_side_duty() {
+    return s_side_balance_duty;
+}
+
+int get_momentum_diff() {
+    return s_momentum_diff;
+}
+
 void control_bottom_balance(struct Control_Target* control_target,
                             struct Control_Flag* control_flag,
                             struct Velocity_Motor* vel_motor,
@@ -367,16 +379,24 @@ static void control_side_angle_velocity(struct Control_Target* control_target) {
 
 void control_shutdown(struct Control_Target* control_target,
                       struct EulerAngle* euler_angle_bias) {
-    if (fabsf(currentSideAngle - euler_angle_bias->pitch -
-              control_target->sideAngle) > 28) {
+    if (fabsf(currentFrontAngle - euler_angle_bias->pitch -
+              control_target->sideAngle) > 60) {
         stop_bottom_motor();
         stop_momentum_motor();
+
+        printf("control_shutdown 1\n");
+        zf_assert(0);
         runState = CAR_STOP;
     }
-    if (fabsf(currentFrontAngle - euler_angle_bias->roll -
-              control_target->frontAngle) > 60) {
+    if (fabsf(currentSideAngle - euler_angle_bias->roll -
+              control_target->frontAngle) > 28) {
         stop_bottom_motor();
         stop_momentum_motor();
+
+        printf("control_shutdown 2\n");
+        char tmp[10];
+        snprintf(tmp, 10, "%.3f", euler_angle_bias->roll);
+        zf_log(0, tmp);
         runState = CAR_STOP;
     }
 }

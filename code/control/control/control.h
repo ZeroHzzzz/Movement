@@ -108,4 +108,8 @@ void control_side_balance(
 void control_turn_balance();
 void control_shutdown(struct Control_Target* control_target,
                       struct EulerAngle* euler_angle_bias);
+
+int32 get_bottom_duty();
+int32 get_side_duty();
+
 #endif

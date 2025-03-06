@@ -72,14 +72,3 @@ void attitude_cal_amend(struct Control_Turn_Manual_Params* turn_param,
     // update module state
     // moduleState.attitude = 1;
 }
-
-void attitude_show() {
-    tft180_full(RGB565_WHITE);
-    tft180_set_color(RGB565_RED, RGB565_WHITE);
-    while (keymsg.key != KEY_L) {
-        tft180_show_float(0, 0 * 16, Get_Pitch(), 3, 3);
-        tft180_show_float(0, 1 * 16, Get_Roll(), 3, 3);
-        tft180_show_float(0, 2 * 16, Get_Yaw(), 3, 3);
-    }
-    tft180_full(RGB565_WHITE);
-}

@@ -35,6 +35,7 @@
  ********************************************************************************************************************/
 
 #include "attitude.h"
+#include "control.h"
 #include "menu.h"
 #include "system.h"
 #include "zf_common_headfile.h"
@@ -60,8 +61,34 @@ void core1_main(void) {
     runState = CAR_STABLE;
     while (TRUE) {
         // 此处编写需要循环执行的代码
-        printf("%f, %f, %f\n", currentFrontAngle, currentSideAngle, yawAngle);
-        // 此处编写需要循环执行的代码
+        // printf("%f, %f, %f\n", currentFrontAngle, currentSideAngle,
+        // yawAngle); 此处编写需要循环执行的代码
+        // printf("%d\n", runState);
+        lcd_show_string(0, 0, "Bottom:");
+        lcd_show_int(8, 0, get_bottom_duty(), 3);
+        lcd_show_string(0, 1, "Side:");
+        lcd_show_int(8, 1, get_side_duty(), 3);
+
+        lcd_show_float(0, 2, (currentFrontAngle - g_euler_angle_bias.pitch), 3,
+                       3);
+        lcd_show_float(8, 2,
+                       currentFrontAngle - g_euler_angle_bias.pitch -
+                           g_control_target.sideAngle,
+                       3, 3);
+        lcd_show_float(0, 3, (currentSideAngle - g_euler_angle_bias.roll), 3,
+                       3);
+        lcd_show_float(8, 3,
+                       currentSideAngle - g_euler_angle_bias.roll -
+                           g_control_target.frontAngle,
+                       3, 3);
+        lcd_show_int(0, 4, runState, 3);
+
+        // lcd_show_string(0, 5, "Pitch:");
+        // lcd_show_float(8, 5, currentFrontAngle, 3, 3);
+        // lcd_show_string(0, 6, "Row:");
+        // lcd_show_float(8, 6, currentSideAngle, 3, 3);
+        // lcd_show_string(0, 7, "Yaw:");
+        // lcd_show_float(8, 7, yawAngle, 3, 3);
     }
 }
 #pragma section all restore

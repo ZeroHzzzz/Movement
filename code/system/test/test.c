@@ -1,4 +1,5 @@
 #include "test.h"
+#include "attitude.h"
 #include "encoder.h"
 #include "lcd.h"
 #include "menu_input.h"
@@ -60,5 +61,34 @@ void test_side_motor() {
         lcd_show_int(16, 6, motor_value.receive_right_speed_data, 3);
     }
     small_driver_set_duty(0, 0);
+    lcd_clear();
+}
+
+void test_attitude() {
+    lcd_clear();
+    while (keymsg.key != KEY_L) {
+        lcd_show_string(0, 0, "Pitch:");
+        lcd_show_float(0, 1, currentFrontAngle, 3, 3);
+        lcd_show_string(0, 2, "Row:");
+        lcd_show_float(0, 3, currentSideAngle, 3, 3);
+        lcd_show_string(0, 4, "Yaw:");
+        lcd_show_float(0, 5, yawAngle, 3, 3);
+    }
+    lcd_clear();
+}
+
+void test_imu() {
+    lcd_clear();
+    while (keymsg.key != KEY_L) {
+        lcd_show_string(0, 0, "x:");
+        lcd_show_float(0, 1, g_imu_data.gyro.x, 3, 3);
+        lcd_show_float(8, 1, g_imu_data.acc.x, 3, 3);
+        lcd_show_string(0, 2, "y:");
+        lcd_show_float(0, 3, g_imu_data.gyro.y, 3, 3);
+        lcd_show_float(8, 3, g_imu_data.acc.y, 3, 3);
+        lcd_show_string(0, 4, "z:");
+        lcd_show_float(0, 5, g_imu_data.gyro.z, 3, 3);
+        lcd_show_float(8, 5, g_imu_data.acc.z, 3, 3);
+    }
     lcd_clear();
 }
