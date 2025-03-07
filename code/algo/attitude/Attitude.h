@@ -16,7 +16,7 @@
 // yaw direction
 #define yawAngle g_euler_angle.yaw
 #define yawAngleVelocity g_imu_data.gyro.z
-#define AngleAcceleration g_imu_data.acc.z
+#define zAngleAcceleration g_imu_data.acc.z
 
 struct EulerAngle {
     float roll;
