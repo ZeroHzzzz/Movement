@@ -24,13 +24,14 @@
 * 文件名称          zf_device_uart_receiver
 * 公司名称          成都逐飞科技有限公司
 * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
-* 开发环境          ADS v1.9.20
+* 开发环境          ADS v1.10.2
 * 适用平台          TC377TP
 * 店铺链接          https://seekfree.taobao.com/
 *
 * 修改记录
 * 日期              作者                备注
 * 2022-11-04       JKS                first version
+* 2025-02-07       pudding            修改部分语句
 ********************************************************************************************************************/
 /*********************************************************************************************************************
 * 接线定义：
@@ -91,7 +92,7 @@ static void uart_receiver_analysis (uart_receiver_struct *remote_data,uint8 * bu
     remote_data->channel[num++] = (buffer[5] >> 1 | buffer[6] << 7 ) & 0x07FF;
     remote_data->channel[num++] = (buffer[6] >> 4 | buffer[7] << 4 ) & 0x07FF;
     remote_data->channel[num++] = (buffer[7] >> 7 | buffer[8] << 1 | buffer[9] << 9 ) & 0x07FF;
-    remote_data->state = (SBUS_NORMAL_STATE == buffer[23]) ? 1 : 0;
+    remote_data->state = (SBUS_ABNORMAL_STATE == (buffer[23] & SBUS_ABNORMAL_STATE)) ? 0 : 1;
     uart_receiver.finsh_flag  = 1;
 }
 
