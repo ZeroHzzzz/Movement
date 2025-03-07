@@ -1,5 +1,6 @@
 #include "velocity.h"
 #include "attitude.h"
+#include "encoder.h"
 #include "kalman_filter_velocity.h"
 
 struct Velocity_Motor g_vel_motor;
@@ -21,7 +22,7 @@ void velocity_init(struct Velocity_Motor* vel_motor) {
 }
 
 void velocity_update(struct Velocity_Motor* vel_motor) {
-    get_momentum_encoder(vel_motor);
+    get_bottom_encoder(vel_motor);
     get_momentum_encoder(vel_motor);
 #ifdef VELOCITY_KALMAN_FILTER
     if (s_vel_update_flag == 0) {

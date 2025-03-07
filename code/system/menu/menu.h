@@ -62,7 +62,7 @@ void Write_EEPROM(void);
 //                   MENU_TABLE* table,
 //                   uint8 num);
 
-// void MainMenu_Set();
+void MainMenu_Set();
 // uint8 Menu_Move();
 // KEY_e KeySan(void);
 // void SubNameCat(uint8* SubMenuName, uint8* TableMenuName);

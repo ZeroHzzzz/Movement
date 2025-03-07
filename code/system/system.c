@@ -3,6 +3,7 @@
 #include "control.h"
 #include "lcd.h"
 #include "menu.h"
+#include "menu_input.h"
 #include "small_driver_uart_control.h"
 #include "velocity.h"
 #include "zf_common_headfile.h"

@@ -93,6 +93,7 @@ extern struct Control_Flag g_control_flag;
 extern struct Control_Time g_control_time;
 extern struct Control_Motion_Manual_Parmas g_control_motion_params;
 
+void control_init(struct Control_Motion_Manual_Parmas* control_motion_params);
 void control_manual_param_init();
 void control_bottom_balance(struct Control_Target* control_target,
                             struct Control_Flag* control_flag,

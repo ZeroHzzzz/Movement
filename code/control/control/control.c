@@ -145,7 +145,7 @@ static void control_bottom_angle(struct EulerAngle* euler_angle_bias,
 
     // simpleFuzzyProcess(&frontBalanceSimpleFuzzy,angleControlFilter[0],control_target->frontAngle,&bottom_angle_PID);
     control_target->frontAngleVelocity = (PID_calc_Position(
-        &bottom_angle_PID, (angleControlFilter[0] - euler_angle_bias->roll),
+        &bottom_angle_PID, (angleControlFilter[0] - euler_angle_bias->pitch),
         control_target->frontAngle));
 }
 
@@ -193,19 +193,25 @@ static void control_side_velocity(
     struct Velocity_Motor* vel_motor,
     struct Control_Target* control_target,
     struct Control_Turn_Manual_Params* control_turn_params) {
-    float alpha =
-        fabsf(control_turn_params->turnCurvature / CONTROL_LAW_CONSTRAINT);
-    static float momentumVelocityFilter[3] = {0};
-    momentumVelocityFilter[0] =
-        (float)(vel_motor->momentumFront - vel_motor->momentumBack);
-    momentumVelocityFilter[1] =
-        (float)(vel_motor->momentumFront + vel_motor->momentumBack);
-    momentumVelocityFilter[2] =
-        momentumVelocityFilter[0] -
-        0.7f * (1 - alpha) * momentumVelocityFilter[1];  // TODO:添加到压弯
+    // float alpha =
+    //     fabsf(control_turn_params->turnCurvature / CONTROL_LAW_CONSTRAINT);
+    // static float momentumVelocityFilter[3] = {0};
+    // momentumVelocityFilter[0] =
+    //     (float)(vel_motor->momentumFront - vel_motor->momentumBack);
+    // momentumVelocityFilter[1] =
+    //     (float)(vel_motor->momentumFront + vel_motor->momentumBack);
+    // momentumVelocityFilter[2] =
+    //     momentumVelocityFilter[0] -
+    //     0.7f * (1 - alpha) * momentumVelocityFilter[1];  // TODO:添加到压弯
 
+    // control_target->sideAngle = (float)PID_calc_Position(
+    //     &side_velocity_PID, (float)momentumVelocityFilter[2], 0.0f);
+
+    static float momentumVelocityFilter = 0;
+    momentumVelocityFilter =
+        (float)(vel_motor->momentumFront - vel_motor->momentumBack);
     control_target->sideAngle = (float)PID_calc_Position(
-        &side_velocity_PID, (float)momentumVelocityFilter[2], 0.0f);
+        &side_velocity_PID, (float)momentumVelocityFilter, 0.0f);
 }
 
 static void control_side_angle(struct EulerAngle* euler_angle_bias,
@@ -216,7 +222,7 @@ static void control_side_angle(struct EulerAngle* euler_angle_bias,
     // noiseFilter(momentumAngleFilter[0],0.02f);
     // lowPassFilter(&momentumAngleFilter[0],&momentumAngleFilter[1],0.1f);
     control_target->sideAngleVelocity = PID_calc_Position(
-        &side_angle_PID, (momentumAngleFilter[0] - euler_angle_bias->pitch),
+        &side_angle_PID, (momentumAngleFilter[0] - euler_angle_bias->roll),
         control_target->sideAngle);
 }
 
@@ -232,8 +238,8 @@ static void control_side_angle_velocity(struct Control_Target* control_target) {
 
 void control_shutdown(struct Control_Target* control_target,
                       struct EulerAngle* euler_angle_bias) {
-    if (fabsf(currentFrontAngle - euler_angle_bias->pitch -
-              control_target->sideAngle) > 60) {
+    if (fabsf(currentSideAngle - euler_angle_bias->roll -
+              control_target->sideAngle) > 28) {
         stop_bottom_motor();
         stop_momentum_motor();
 
@@ -241,8 +247,8 @@ void control_shutdown(struct Control_Target* control_target,
         zf_assert(0);
         runState = CAR_STOP;
     }
-    if (fabsf(currentSideAngle - euler_angle_bias->roll -
-              control_target->frontAngle) > 28) {
+    if (fabsf(currentFrontAngle - euler_angle_bias->pitch -
+              control_target->frontAngle) > 60) {
         stop_bottom_motor();
         stop_momentum_motor();
 
