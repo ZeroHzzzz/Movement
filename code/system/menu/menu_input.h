@@ -40,6 +40,11 @@ struct Control_Turn_Manual_Params;
 struct Control_Motion_Manual_Parmas;
 
 void menu_manual_param_init();
+void menu_get_params(
+    struct EulerAngle* euler_angle_bias,
+    struct Control_Time* control_time,
+    struct Control_Turn_Manual_Params* control_turn_params,
+    struct Control_Motion_Manual_Parmas* control_motion_params);
 
 extern struct Menu_Manual_Param g_menu_manual_param;
 #endif

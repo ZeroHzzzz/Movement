@@ -1,7 +1,7 @@
 #include "velocity.h"
 #include "attitude.h"
+#include "encoder.h"
 #include "kalman_filter_velocity.h"
-#include "motor.h"
 
 struct Velocity_Motor g_vel_motor;
 static kalman_filter_velocity_t s_kf;

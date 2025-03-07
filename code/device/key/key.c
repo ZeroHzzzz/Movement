@@ -83,7 +83,7 @@ void key_send_msg(KEY_MSG_t keymsg) {
     }
 }
 
-void key_IRQHandler(void) {
+void key_IRQHandler() {
     KEY_e keynum;
     static uint8 keytime[KEY_MAX] = {0};
     KEY_MSG_t keymsg;

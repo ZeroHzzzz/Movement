@@ -267,7 +267,7 @@ MENU_TABLE MainMenu_Table[] = {
  * EntryParameter : None
  * ReturnValue    : None
  *******************************************************************************/
-void MainMenu_Set(void) {
+void MainMenu_Set() {
     // ExitMenu_flag = 0;
     lcd_clear();
     MENU_PRMT MainMenu_Prmt;

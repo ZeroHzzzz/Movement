@@ -126,13 +126,13 @@
 #include "my_filter.h"
 
 // device
+#include "encoder.h"
 #include "imu.h"
 #include "key.h"
 #include "lcd.h"
 #include "motor.h"
 #include "small_driver_uart_control.h"
 #include "system.h"
-
 #include "test.h"
 
 //
