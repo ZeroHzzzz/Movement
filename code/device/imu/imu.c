@@ -17,11 +17,11 @@ void imu_get_data(IMU_DATA* data) {
     imu963ra_get_acc();
 
     data->gyro.x = imu963ra_gyro_transition(imu963ra_gyro_x) * DEG2RAD;
-    data->gyro.y = imu963ra_gyro_transition(imu963ra_gyro_y) * DEG2RAD;
+    data->gyro.y = -imu963ra_gyro_transition(imu963ra_gyro_y) * DEG2RAD;
     data->gyro.z = imu963ra_gyro_transition(imu963ra_gyro_z) * DEG2RAD;
 
     data->acc.x = imu963ra_acc_transition(imu963ra_acc_x) * GravityAcc;
-    data->acc.y = imu963ra_acc_transition(imu963ra_acc_y) * GravityAcc;
+    data->acc.y = -imu963ra_acc_transition(imu963ra_acc_y) * GravityAcc;
     data->acc.z = imu963ra_acc_transition(imu963ra_acc_z) * GravityAcc;
 }
 

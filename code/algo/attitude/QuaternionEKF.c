@@ -173,8 +173,8 @@ void IMU_QuaternionEKF_Update(IMU_DATA* imu_data) {
     QEKF_INS.IMU_QuaternionEKF.F_data[20] = -halfgxdt;
 
     QEKF_INS.Accel[0] = imu_data->acc.x;
-    QEKF_INS.Accel[1] = imu_data->acc.x;
-    QEKF_INS.Accel[2] = imu_data->acc.x;
+    QEKF_INS.Accel[1] = imu_data->acc.y;
+    QEKF_INS.Accel[2] = imu_data->acc.z;
     // accel low pass filter,加速度过一下低通滤波平滑数据,降低撞击和异常的影响
     //    if (QEKF_INS.UpdateCount == 0) // 如果是第一次进入,需要初始化低通滤波
     //    {

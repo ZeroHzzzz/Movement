@@ -2,8 +2,6 @@
 #include "attitude.h"
 #include "kalman_filter_velocity.h"
 
-#define VELOCITY_KALMAN_FILTER
-
 struct Velocity_Motor g_vel_motor;
 static kalman_filter_velocity_t s_kf;
 static uint8 s_vel_update_flag = 0;

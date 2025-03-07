@@ -4,6 +4,7 @@
 #include "zf_common_headfile.h"
 
 #define V_KALMAN_MULTIPLE 500
+#define VELOCITY_KALMAN_FILTER
 
 struct Velocity_Motor {
     int32 momentumFront;
