@@ -24,7 +24,7 @@
 * 文件名称          seekfree_assistant_interface
 * 公司名称          成都逐飞科技有限公司
 * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
-* 开发环境          ADS v1.9.20
+* 开发环境          ADS v1.10.2
 * 适用平台          TC377TP
 * 店铺链接          https://seekfree.taobao.com/
 *
@@ -91,8 +91,10 @@ ZF_WEAK void seekfree_assistant_interface_init (seekfree_assistant_transfer_devi
     {
         case SEEKFREE_ASSISTANT_DEBUG_UART:
         {
+#if     DEBUG_UART_USE_INTERRUPT == 1
             seekfree_assistant_transfer_callback = debug_send_buffer;
             seekfree_assistant_receive_callback = debug_read_ring_buffer;
+#endif
         }break;
         
         case SEEKFREE_ASSISTANT_WIRELESS_UART:

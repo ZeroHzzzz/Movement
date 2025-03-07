@@ -24,7 +24,7 @@
 * 文件名称          zf_driver_spi
 * 公司名称          成都逐飞科技有限公司
 * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
-* 开发环境          ADS v1.9.20
+* 开发环境          ADS v1.10.2
 * 适用平台          TC377TP
 * 店铺链接          https://seekfree.taobao.com/
 *
@@ -33,6 +33,7 @@
 * 2022-11-03       pudding            first version
 * 2023-04-28       pudding            修复多个SPI同时使用可能产生冲突的问题
 * 2023-05-27       pudding            修复SPI4无法使用的问题
+* 2025-02-07       pudding            修复16位通讯的异常错位问题
 ********************************************************************************************************************/
 
 #include "IFXQSPI_REGDEF.h"
@@ -783,11 +784,11 @@ uint16 spi_read_16bit_register (spi_index_enum spi_n, const uint16 register_name
 
     IfxQspi_writeTransmitFifo(moudle, (uint8)((register_name & 0xFF00) >> 8));      // 将发送的数据写入缓冲区
 
-    while(moudle->STATUS.B.RXFIFOLEVEL == 0);                       // 等待接收完毕
+    while(moudle->STATUS.B.RXFIFOLEVEL == 0);                       // 等待接收完毕   首次发送数据 此时接收缓冲区无数据
 
     IfxQspi_writeTransmitFifo(moudle, (uint8)(register_name & 0x00FF));             // 将发送的数据写入缓冲区
 
-    while(moudle->STATUS.B.RXFIFOLEVEL == 0);                       // 等待接收完毕
+    while(moudle->STATUS.B.RXFIFOLEVEL == 1);                       // 等待接收完毕   再次发送数据 此时接收缓冲区有1个数据
 
     spi_clear_fifo(moudle);                                         // 清除接收缓存区
 
@@ -835,11 +836,11 @@ void spi_read_16bit_registers (spi_index_enum spi_n, const uint16 register_name,
 
     IfxQspi_writeTransmitFifo(moudle, (uint8)((register_name & 0xFF00) >> 8));      // 将发送的数据写入缓冲区
 
-    while(moudle->STATUS.B.RXFIFOLEVEL == 0);                       // 等待接收完毕
+    while(moudle->STATUS.B.RXFIFOLEVEL == 0);                       // 等待接收完毕   首次发送数据 此时接收缓冲区无数据
 
     IfxQspi_writeTransmitFifo(moudle, (uint8)(register_name & 0x00FF));             // 将发送的数据写入缓冲区
 
-    while(moudle->STATUS.B.RXFIFOLEVEL == 0);                       // 等待接收完毕
+    while(moudle->STATUS.B.RXFIFOLEVEL == 1);                       // 等待接收完毕   再次发送数据 此时接收缓冲区有1个数据
 
     spi_clear_fifo(moudle);                                         // 清除接收缓存区
 

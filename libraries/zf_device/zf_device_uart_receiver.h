@@ -24,13 +24,14 @@
 * 文件名称          zf_device_uart_receiver
 * 公司名称          成都逐飞科技有限公司
 * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
-* 开发环境          ADS v1.9.20
+* 开发环境          ADS v1.10.2
 * 适用平台          TC377TP
 * 店铺链接          https://seekfree.taobao.com/
 *
 * 修改记录
 * 日期              作者                备注
 * 2022-11-04       JKS                first version
+* 2025-02-07       pudding            修改部分语句
 ********************************************************************************************************************/
 /*********************************************************************************************************************
 * 接线定义：
@@ -55,8 +56,7 @@
 #define REV_DATA_LEN                        ( 25   )            // SBUS帧长
 #define FRAME_STAR                          ( 0X0F )            // 帧头信息
 #define FRAME_END                           ( 0X00 )            // 帧尾信息
-#define SBUS_NORMAL_STATE                   ( 0X03 )            // 正常状态
-#define SBUS_ABNORMAL_STATE                 ( 0X0F )            // 失控状态
+#define SBUS_ABNORMAL_STATE                 ( 0X04 )            // 失控状态
 
 typedef struct
 {
