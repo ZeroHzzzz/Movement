@@ -147,9 +147,6 @@ static void control_bottom_angle(struct EulerAngle* euler_angle_bias,
     control_target->frontAngleVelocity = (PID_calc_Position(
         &bottom_angle_PID, (angleControlFilter[0] - euler_angle_bias->roll),
         control_target->frontAngle));
-    // {
-    //     control_target->frontAngleVelocity = 0;
-    // }
 }
 
 static void control_bottom_angle_velocity(
@@ -158,18 +155,10 @@ static void control_bottom_angle_velocity(
     static float angleVelocityControlFilter[2] = {0};
     angleVelocityControlFilter[1] = angleVelocityControlFilter[0];
     angleVelocityControlFilter[0] = currentFrontAngleVelocity;
-    // lowPassFilter(&angleVelocityControlFilter[0],&angleVelocityControlFilter[1],0.1f);
-    // noiseFilter(angleVelocityControlFilter[0],1.0f);
 
-    // restrictValueF(&angleVelocityControlFilter[0],-150,150);
-    // test_t = frontFeedforward();
     s_bottom_balance_duty = (int32)(PID_calc_DELTA(
         &bottom_angle_velocity_PID, angleVelocityControlFilter[0],
         control_target->frontAngleVelocity));
-
-    // s_bottom_balance_duty = (int32)
-    // (PID_calc_DELTA(&bottom_angle_velocity_PID,angleVelocityControlFilter[0],control_target->frontAngleVelocity))
-    // + frontFeedforward();
 }
 
 void control_side_balance(
@@ -194,13 +183,7 @@ void control_side_balance(
     int32 left_motor_duty, right_motor_duty;
     left_motor_duty = s_side_balance_duty - s_momentum_diff;
     right_motor_duty = -s_side_balance_duty - s_momentum_diff;
-    // leftMotorDuty=s_side_balance_duty;
-    // rightMotorDuty=-s_side_balance_duty;
-    // leftMotorDuty = -s_momentum_diff;
-    // rightMotorDuty = s_momentum_diff;
-    // {
-    // tft180_show_int(50,10,s_side_balance_duty,6);
-    // }
+
     restrictValueI(&s_side_balance_duty, -9999, 9999);
     set_momentum_motor_pwm(left_motor_duty, right_motor_duty);
     // set momentum motor pwm to keep side balance
@@ -220,26 +203,7 @@ static void control_side_velocity(
     momentumVelocityFilter[2] =
         momentumVelocityFilter[0] -
         0.7f * (1 - alpha) * momentumVelocityFilter[1];  // TODO:添加到压弯
-    // convergenceGain = momentumVelocityFilter[2] * 0.03f;
-    // test_t = momentumVelocityFilter[2];
-    // noiseFilter(momentumVelocityFilter[0],0.02f);
-    // lowPassFilter(&momentumVelocityFilter[0],&momentumVelocityFilter[1],0.1f);//TODO:fix
-    // bug
 
-    // if((vel_motor->momentumFront > 0)){
-    //     momentumVelocityFilter[0] = ((float)abs(vel_motor->momentumFront)
-    //     + (float)abs(vel_motor->momentumBack));
-    // }
-    // else if((vel_motor->momentumFront < 0)){
-    //     momentumVelocityFilter[0] = -((float)abs(vel_motor->momentumFront)
-    //     + (float)abs(vel_motor->momentumBack));
-    // }
-    // int32 v[2] = {0};
-    // v[0] = vel_motor->momentumFront;
-    // v[1] = -vel_motor->momentumBack;
-    // momentumVelocityFilter[0] = (float)(v[0]+v[1]);
-    // momentumVelocityFilter[0] =
-    // (float)(vel_motor->momentumFront-vel_motor->momentumBack);
     control_target->sideAngle = (float)PID_calc_Position(
         &side_velocity_PID, (float)momentumVelocityFilter[2], 0.0f);
 }
@@ -254,127 +218,16 @@ static void control_side_angle(struct EulerAngle* euler_angle_bias,
     control_target->sideAngleVelocity = PID_calc_Position(
         &side_angle_PID, (momentumAngleFilter[0] - euler_angle_bias->pitch),
         control_target->sideAngle);
-    // {
-    //     float error = control_target->sideAngle - momentumAngleFilter[0];
-    //     error = fabsf(error);
-    //     if(error<=0.15){
-    //         if(control_target->sideAngleVelocity > 0){
-    //             control_target->sideAngleVelocity += (float)(expf(error
-    //             + 1.1)
-    //             - 1.0f)
-    //             *(1.0f-(float)control_flag->sideAngleCount/(float)menuSideControlTimeParameter[1]);
-    //         }else{
-    //             control_target->sideAngleVelocity -= (float)(expf(error
-    //             + 1.1)
-    //             - 1.0f)
-    //             *(1.0f-(float)control_flag->sideAngleCount/(float)menuSideControlTimeParameter[1]);
-    //         }
-    //     }else if(error < 0.3){
-    //         if(control_target->sideAngleVelocity > 0){
-    //             control_target->sideAngleVelocity += (float)logf(1 +
-    //             1/(error-0.05))
-    //             *(1.0f-(float)control_flag->sideAngleCount/(float)menuSideControlTimeParameter[1]);
-    //         }else{
-    //             control_target->sideAngleVelocity -= (float)logf(1 +
-    //             1/(error-0.05))
-    //             *(1.0f-(float)control_flag->sideAngleCount/(float)menuSideControlTimeParameter[1]);
-    //         }
-    //     }else{
-    //         if(control_target->sideAngleVelocity > 0){
-    //             control_target->sideAngleVelocity += (float)(expf(error +
-    //             0.9)
-    //             - 1.0f)*2.5f
-    //             *(1.0f-(float)control_flag->sideAngleCount/(float)menuSideControlTimeParameter[1]);
-    //         }else{
-    //             control_target->sideAngleVelocity -= (float)(expf(error +
-    //             0.9)
-    //             - 1.0f)*2.5f
-    //             *(1.0f-(float)control_flag->sideAngleCount/(float)menuSideControlTimeParameter[1]);
-    //         }
-    //     }
-    // }
-    // {
-    //     control_target->sideAngleVelocity = 0;
-    // }
 }
 
 static void control_side_angle_velocity(struct Control_Target* control_target) {
     static float momentumGyroFilter[2] = {0};  // 角度速度滤波
     momentumGyroFilter[1] = momentumGyroFilter[0];
     momentumGyroFilter[0] = currentSideAngleVelocity;
-    // noiseFilter(momentumGyroFilter[0],0.02f);
-    // lowPassFilter(&momentumGyroFilter[0],&momentumGyroFilter[1],0.1f);
 
     s_side_balance_duty =
         (int32)(PID_calc_DELTA(&side_angle_velocity_PID, momentumGyroFilter[0],
                                control_target->sideAngleVelocity));
-
-    // TODO:feedforward
-    //  int32 v = abs(vel_motor->momentumFront);
-    //  restrictValueI(&v,0,12);
-    //  if(s_side_balance_duty >= 0){
-    //      s_side_balance_duty += v * 100;
-    //  }else{
-    //      s_side_balance_duty -= v * 100;
-    //  }
-    //  if(s_side_balance_duty >= 0){
-    //      s_side_balance_duty += PID_calc_Position(&compensatePID,v,5);
-    //  }else{
-    //      s_side_balance_duty -= PID_calc_Position(&compensatePID,v,-5);
-    //  }
-    //  {
-    //  static vel_motor preSideVelocity;
-    //  static uint8 cntFront = 0;
-    //  static uint8 cntBack = 0;
-    //  preSideVelocity.momentumBack = vel_motor->momentumBack;
-    //  preSideVelocity.momentumFront = vel_motor->momentumFront;
-    //  //if the motor velocity is increasing
-    //  if((preSideVelocity.momentumFront - vel_motor->momentumFront > 0) &&
-    //  (abs(preSideVelocity.momentumFront - vel_motor->momentumFront) < 2
-    //  /*avoid shaking*/)){
-    //      cntFront++;
-    //  }else if(preSideVelocity.momentumFront - vel_motor->momentumFront <
-    //  0){
-    //      cntFront = 0;
-    //  }
-    //  if((preSideVelocity.momentumBack - vel_motor->momentumBack > 0) &&
-    //  (abs(preSideVelocity.momentumBack - vel_motor->momentumBack) < 2
-    //  /*avoid shaking*/)){
-    //      cntBack++;
-    //  }else if(preSideVelocity.momentumBack - vel_motor->momentumBack < 0){
-    //      cntBack = 0;
-    //  }
-    //  //add feedforward
-    //  int32 v = abs(vel_motor->momentumFront);
-    //  static float preT = 0;
-    //  restrictValueI(&v,0,12);
-    //  float t = 0.012f*(float)v;
-    //  restrictValueF(&t,0.01f,0.05f);
-    //  //TODO:fix here
-    //  if(s_side_balance_duty >= 0){
-    //      if((fabsf(t - preT) < 0.036f)&&(cntFront > 0)){//restrict the change
-    //      of t, avoid shaking
-    //          g_euler_angle_bias->pitch = mechanicalPitchAngle*0.01f + t;
-    //          // preT = t;
-    //      }
-    //      s_side_balance_duty += v * 100;
-    //      if(cntFront > 1 && cntFront < 4 && v > 3){
-    //          s_side_balance_duty += expf((float)cntFront + 1.5f) * (4.5f -
-    //          0.5f * (float)cntFront);
-    //      }
-    //  }else{
-    //      if((fabsf(t - preT) < 0.036f)&&(cntBack > 0)){//avoid shaking
-    //          g_euler_angle_bias->pitch = mechanicalPitchAngle*0.01f - t;
-    //          // preT = t;
-    //      }
-    //      s_side_balance_duty -= v * 100;
-    //      if(cntBack > 1 && cntBack < 4 && v > 3){
-    //          s_side_balance_duty -= expf((float)cntBack + 1.5f) * (4.5f -
-    //          0.5f * (float)cntBack);
-    //      }
-    //  }
-    //  preT = t;
-    // }
 }
 
 void control_shutdown(struct Control_Target* control_target,
@@ -402,12 +255,6 @@ void control_shutdown(struct Control_Target* control_target,
 }
 
 void control_init(struct Control_Motion_Manual_Parmas* control_motion_params) {
-    // buckingK = (float)buckingTurnCoefficient * 0.01f;
-    // turnGain = (float)turnGainCoefficient * 0.01f;
-    // g_euler_angle_bias->yaw = (float)mechanicalYawAngle * 0.01f;
-    // g_euler_angle_bias->pitch = (float)mechanicalPitchAngle * 0.01f;  // side
-    // g_euler_angle_bias->roll = (float)mechanicalRollAngle * 0.01f;    //
-    // front current wheel pid
     control_param_init(&bottom_angle_velocity_PID,
                        control_motion_params->bottom_angle_velocity_parameter,
                        10, MOTOR_PWM_MAX, 9999);
@@ -427,11 +274,6 @@ void control_init(struct Control_Motion_Manual_Parmas* control_motion_params) {
     control_param_init(&side_velocity_PID,
                        control_motion_params->side_velocity_parameter, 1000,
                        9999, 1.5f);
-    // control_param_init(&compensatePID, menuCompensateParameter, 1 , 9999,
-    // 80);
-    // TODO:add turn part
-    // control_param_init(&sideAngleGainPID, menuSideAngleGainParameter,
-    // pidCoefficient, 2500, 80);
     control_param_init(&turn_angle_PID,
                        control_motion_params->turn_angle_parameter, 100, 9999,
                        5);
@@ -466,7 +308,6 @@ void control_manual_param_init() {
     turn_angle_velocity_PID.Kp = 0;
     turn_angle_velocity_PID.Ki = 0;
     turn_angle_velocity_PID.Kd = 0;
-    // turn
 }
 
 static void control_param_init(pid_type_def* pid,
@@ -480,15 +321,3 @@ static void control_param_init(pid_type_def* pid,
     temp_pid[2] = (float)para[2] / coefficient;
     PID_init_Position(pid, temp_pid, maxOut, maxIOut);
 }
-
-// static float control_bottom_feedforward() {  // TODO: fix bug
-//     static float accZ[2] = {0};
-//     accZ[0] = AngleAcceleration;
-//     float g = (accZ[0] - accZ[1]) * (float)bucklingFrontCoefficientV * 10.0f;
-//     accZ[1] = accZ[0];
-//     restrictValueF(&g, 1000, -1000);
-//     float ret = (control_target->frontVelocity - vel_motor->bottom) *
-//                 (float)bucklingFrontCoefficientV * 0.01f;
-//     restrictValueF(&ret, 2800, -2800);
-//     return ret - fabsf(g);
-// }
