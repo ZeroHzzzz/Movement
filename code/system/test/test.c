@@ -5,6 +5,7 @@
 #include "menu_input.h"
 #include "motor.h"
 #include "small_driver_uart_control.h"
+#include "velocity.h"
 #include "zf_common_headfile.h"
 
 void test_bottom_motor() {
@@ -16,15 +17,15 @@ void test_bottom_motor() {
         if (keymsg.key == KEY_U)  // 向前
         {
             gpio_set_level(DIR_BOTTOM, 1);
-            pwm_set_duty(MOTOR_BOTTOM, 1000);
+            pwm_set_duty(MOTOR_BOTTOM, 2000);
         }
         if (keymsg.key == KEY_D)  // 向后
         {
             gpio_set_level(DIR_BOTTOM, 0);
-            pwm_set_duty(MOTOR_BOTTOM, 1000);
+            pwm_set_duty(MOTOR_BOTTOM, 2000);
         }
         lcd_show_string(0, 5, "Now Speed:");
-        lcd_show_int(0, 6, encoder_get_count(ENCODER_BOTTOM), 3);
+        lcd_show_float(0, 6, g_vel_motor.bottomReal, 6, 3);
     }
     pwm_set_duty(MOTOR_BOTTOM, 0);
     lcd_clear();

@@ -42,6 +42,8 @@ void velocity_update(struct Velocity_Motor* vel_motor) {
     kalman_filter_velocity_update(&s_kf, z);
     vel_motor->bottomReal = s_kf.x[0];
     vel_motor->bottomFiltered = s_kf.x[0] * V_KALMAN_MULTIPLE;
+
+    // printf("%f, %f\n", vel_motor->bottomReal, vel_motor->bottomFiltered);
 #endif
 
     // motorVelocity.bottomFiltered = (float)motorVelocity.bottom * 2.077e-3f;
