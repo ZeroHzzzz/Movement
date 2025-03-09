@@ -107,8 +107,8 @@ void control_bottom_balance(struct Control_Target* control_target,
         }
     }
     set_bottom_motor_pwn(
-        (int32)(s_bottom_balance_duty));  // set bottom motor pwm to
-                                          // keep front balance
+        (int32)(-s_bottom_balance_duty));  // set bottom motor pwm to
+                                           // keep front balance
 }
 
 static void control_bottom_velocity(struct Velocity_Motor* vel_motor,
@@ -185,6 +185,9 @@ void control_side_balance(
     right_motor_duty = -s_side_balance_duty - s_momentum_diff;
 
     restrictValueI(&s_side_balance_duty, -9999, 9999);
+
+    printf("%d,%d\n", left_motor_duty, right_motor_duty);
+
     set_momentum_motor_pwm(left_motor_duty, right_motor_duty);
     // set momentum motor pwm to keep side balance
 }

@@ -38,6 +38,7 @@ void set_momentum_motor_pwm(int32 pwmFront, int32 pwmBack) {
     // WARN: 正负值可能需要调整
     restrictValueI(&pwmFront, MOMENTUM_MOTOR_PWM_MIN, MOMENTUM_MOTOR_PWM_MAX);
     restrictValueI(&pwmBack, MOMENTUM_MOTOR_PWM_MIN, MOMENTUM_MOTOR_PWM_MAX);
+    printf("%d, %d\n", pwmFront, pwmBack);
     small_driver_set_duty(pwmFront, pwmBack);
 }
 
