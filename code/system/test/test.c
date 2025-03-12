@@ -17,16 +17,16 @@ void test_bottom_motor() {
         if (keymsg.key == KEY_U)  // 向前
         {
             gpio_set_level(DIR_BOTTOM, 1);
-            pwm_set_duty(MOTOR_BOTTOM, 10000);
+            pwm_set_duty(MOTOR_BOTTOM, 8000);
         }
         if (keymsg.key == KEY_D)  // 向后
         {
             gpio_set_level(DIR_BOTTOM, 0);
-            pwm_set_duty(MOTOR_BOTTOM, 10000);
+            pwm_set_duty(MOTOR_BOTTOM, 8000);
         }
-        lcd_show_string(0, 5, "Now Speed:");
-        int speed = encoder_get_count(ENCODER_BOTTOM);
-        lcd_show_int(0, 6, speed, 5);
+        lcd_show_int(0, 5, g_vel_motor.bottom, 5);
+        lcd_show_float(0, 6, g_vel_motor.bottomReal, 5, 5);
+        lcd_show_float(0, 7, g_vel_motor.bottomFiltered, 5, 5);
         // encoder_clear_count(ENCODER_BOTTOM);
     }
     pwm_set_duty(MOTOR_BOTTOM, 0);
