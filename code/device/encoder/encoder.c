@@ -6,7 +6,7 @@
 static void pass_momentum_encoder(int32 frontValue,
                                   int32 backValue,
                                   struct Velocity_Motor* vel_motor) {
-    vel_motor->momentumFront = -frontValue;
+    vel_motor->momentumFront = -frontValue;  // TODO :fix bug
     vel_motor->momentumBack = -backValue;
     vel_motor->velocityDiff =
         vel_motor->momentumFront + vel_motor->momentumBack;

@@ -33,6 +33,43 @@ void test_bottom_motor() {
     lcd_clear();
 }
 
+void test_side_motor() {
+    lcd_clear();
+    lcd_show_string(0, 0, "KEY_U: left  forward");
+    lcd_show_string(0, 1, "KEY_D: left backward");
+    lcd_show_string(0, 2, "KEY_B: right forward");
+    lcd_show_string(0, 3, "KEY_R:right backward");
+    lcd_show_string(0, 4, "Press KEY_L to exit");
+    // int count = 0;
+    while (keymsg.key != KEY_L) {
+        if (keymsg.key == KEY_U)  // 向前
+        {
+            small_driver_set_duty(1000, 0);
+        }
+        if (keymsg.key == KEY_D)  // 向后
+        {
+            small_driver_set_duty(-1000, 0);
+        }
+        if (keymsg.key == KEY_B)  // 向前
+        {
+            small_driver_set_duty(0, 1000);
+        }
+        if (keymsg.key == KEY_R)  // 向后
+        {
+            small_driver_set_duty(0, -1000);
+        }
+        // count++;
+        lcd_show_string(0, 5, "Left:");
+        lcd_show_int(8, 5, g_vel_motor.momentumFront, 5);
+        lcd_show_string(0, 6, "Right:");
+        lcd_show_int(8, 6, g_vel_motor.momentumBack, 5);
+        // lcd_show_string(0, 7, "count:");
+        // lcd_show_int(8, 7, count, 5);
+    }
+    small_driver_set_duty(0, 0);
+    lcd_clear();
+}
+
 // void test_side_motor() {
 //     lcd_clear();
 //     lcd_show_string(0, 0, "KEY_U: left  forward");
@@ -42,52 +79,15 @@ void test_bottom_motor() {
 //     lcd_show_string(0, 4, "Press KEY_L to exit");
 //     int count = 0;
 //     while (keymsg.key != KEY_L) {
-//         if (keymsg.key == KEY_U)  // 向前
-//         {
-//             small_driver_set_duty(1000, 0);
+//         if (keymsg.key == KEY_U) {
+//             small_driver_set_duty(-600, 600);
+//         } else if (keymsg.key == KEY_D) {
+//             small_driver_set_duty(-5000, 5000);
 //         }
-//         if (keymsg.key == KEY_D)  // 向后
-//         {
-//             small_driver_set_duty(-1000, 0);
-//         }
-//         if (keymsg.key == KEY_B)  // 向前
-//         {
-//             small_driver_set_duty(0, 1000);
-//         }
-//         if (keymsg.key == KEY_R)  // 向后
-//         {
-//             small_driver_set_duty(0, -1000);
-//         }
-//         count++;
-//         lcd_show_string(0, 5, "Left:");
-//         lcd_show_int(8, 5, motor_value.receive_left_speed_data, 5);
-//         lcd_show_string(0, 6, "Right:");
-//         lcd_show_int(8, 6, motor_value.receive_right_speed_data, 5);
-//         lcd_show_string(0, 7, "count:");
-//         lcd_show_int(8, 7, count, 5);
 //     }
 //     small_driver_set_duty(0, 0);
 //     lcd_clear();
 // }
-
-void test_side_motor() {
-    lcd_clear();
-    lcd_show_string(0, 0, "KEY_U: left  forward");
-    lcd_show_string(0, 1, "KEY_D: left backward");
-    lcd_show_string(0, 2, "KEY_B: right forward");
-    lcd_show_string(0, 3, "KEY_R:right backward");
-    lcd_show_string(0, 4, "Press KEY_L to exit");
-    int count = 0;
-    while (keymsg.key != KEY_L) {
-        if (keymsg.key == KEY_U) {
-            small_driver_set_duty(-600, 600);
-        } else if (keymsg.key == KEY_D) {
-            small_driver_set_duty(-8000, 8000);
-        }
-    }
-    small_driver_set_duty(0, 0);
-    lcd_clear();
-}
 
 void test_attitude() {
     lcd_clear();

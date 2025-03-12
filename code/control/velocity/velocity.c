@@ -35,7 +35,7 @@ void velocity_update(struct Velocity_Motor* vel_motor) {
     // V_KALMAN_MULTIPLE;
 
     kalman_filter_velocity_predict(&s_kf);
-    printf("%f\n", ENCODER_TO_VELOCITY);
+    // printf("%f\n", ENCODER_TO_VELOCITY);
     float z_1 = (float)vel_motor->bottom * ENCODER_TO_VELOCITY;  // m/s
     float z_2 = -currentFrontAcceleration /
                 cosf(ANGLE_TO_RAD(currentFrontAngle));  // m/s^2
