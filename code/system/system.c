@@ -28,7 +28,7 @@ void system_init() {
 
     // init key
     key_init_rewrite(KEY_MAX);
-    pit_ms_init(CCU60_CH1, 4);
+    pit_ms_init(CCU60_CH1, KEY_UPDATE_T);
     printf("key_init\n");
 
     // menu_param
@@ -38,7 +38,7 @@ void system_init() {
     // velocity
     velocity_init(&g_vel_motor);
     printf("velocity_init\n");
-    pit_ms_init(CCU60_CH0, 1);
+    pit_ms_init(CCU60_CH0, VELOCITY_UPDATE_T);
 
     control_manual_param_init();
     printf("control_manual_param_init\n");
@@ -49,7 +49,7 @@ void system_init() {
     // init attitude
     attitude_init();
     printf("attitude_init\n");
-    pit_ms_init(CCU61_CH1, 1);
+    pit_ms_init(CCU61_CH1, ATTITUDE_UPDATE_T);
 
     // read eeprom
     Read_EEPROM();
@@ -66,7 +66,7 @@ void system_init() {
     control_init(&g_control_motion_params);
     printf("control_init\n");
     // start to balance
-    pit_ms_init(CCU61_CH0, 50);
+    pit_ms_init(CCU61_CH0, CONTROL_UPDATE_T);
 }
 
 void system_attitude_timer(

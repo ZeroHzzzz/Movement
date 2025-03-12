@@ -5,6 +5,7 @@
 
 #define V_KALMAN_MULTIPLE 500
 #define VELOCITY_KALMAN_FILTER
+#define VELOCITY_UPDATE_T 1  // 更新频率
 
 struct Velocity_Motor {
     int32 momentumFront;

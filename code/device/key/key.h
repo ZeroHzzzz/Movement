@@ -8,6 +8,8 @@
 
 #define KEY_MSG_FIFO_SIZE 20
 
+#define KEY_UPDATE_T 4  // 更新频率
+
 typedef enum {
     KEY_U,
     KEY_D,
