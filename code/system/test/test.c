@@ -17,12 +17,12 @@ void test_bottom_motor() {
         if (keymsg.key == KEY_U)  // 向前
         {
             gpio_set_level(DIR_BOTTOM, 1);
-            pwm_set_duty(MOTOR_BOTTOM, 5000);
+            pwm_set_duty(MOTOR_BOTTOM, 10000);
         }
         if (keymsg.key == KEY_D)  // 向后
         {
             gpio_set_level(DIR_BOTTOM, 0);
-            pwm_set_duty(MOTOR_BOTTOM, 5000);
+            pwm_set_duty(MOTOR_BOTTOM, 10000);
         }
         lcd_show_string(0, 5, "Now Speed:");
         int speed = encoder_get_count(ENCODER_BOTTOM);

@@ -107,23 +107,21 @@ void control_bottom_balance(struct Control_Target* control_target,
         }
     }
     set_bottom_motor_pwn(
-        (int32)(-s_bottom_balance_duty));  // set bottom motor pwm to
-                                           // keep front balance
+        (int32)(s_bottom_balance_duty));  // set bottom motor pwm to
+                                          // keep front balance
 }
 
 static void control_bottom_velocity(struct Velocity_Motor* vel_motor,
                                     struct Control_Target* control_target) {
 #ifdef VELOCITY_KALMAN_FILTER
-    control_target->frontAngle =
-        -0.1f * PID_calc_Position(&bottom_velocity_PID,
-                                  (float)vel_motor->bottomFiltered,
-                                  control_target->frontVelocity);
+    control_target->frontAngle = PID_calc_Position(
+        &bottom_velocity_PID, (float)vel_motor->bottomFiltered,
+        control_target->frontVelocity);
 #endif
 #ifndef VELOCITY_KALMAN_FILTER
     control_target->frontAngle =
-        -0.1f * PID_calc_Position(&bottom_velocity_PID,
-                                  (float)vel_motor->bottom,
-                                  control_target->frontVelocity);
+        PID_calc_Position(&bottom_velocity_PID, (float)vel_motor->bottom,
+                          control_target->frontVelocity);
 #endif
     // control_target->frontAngle = g_euler_angle_bias->roll - 0.1f *
     // PID_calc_Position_DynamicI(&bottom_velocity_PID,(float)vel_motor->bottom,control_target->frontVelocity,
