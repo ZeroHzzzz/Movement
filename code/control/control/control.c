@@ -184,7 +184,7 @@ void control_side_balance(
 
     restrictValueI(&s_side_balance_duty, -9999, 9999);
 
-    printf("%d,%d\n", left_motor_duty, right_motor_duty);
+    // printf("%d,%d\n", left_motor_duty, right_motor_duty);
 
     set_momentum_motor_pwm(left_motor_duty, right_motor_duty);
     // set momentum motor pwm to keep side balance
@@ -232,9 +232,13 @@ static void control_side_angle_velocity(struct Control_Target* control_target) {
     momentumGyroFilter[1] = momentumGyroFilter[0];
     momentumGyroFilter[0] = currentSideAngleVelocity;
 
+    // printf("%.2f, %.2f\n", control_target->sideAngleVelocity,
+    //        currentSideAngleVelocity / 0.0174533f);
+
     s_side_balance_duty =
         (int32)(PID_calc_DELTA(&side_angle_velocity_PID, momentumGyroFilter[0],
                                control_target->sideAngleVelocity));
+    printf("%d\n", s_side_balance_duty);
 }
 
 void control_shutdown(struct Control_Target* control_target,
