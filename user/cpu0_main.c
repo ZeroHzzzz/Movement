@@ -1,12 +1,13 @@
 /*********************************************************************************************************************
- * TC377 Opensourec Library 即（TC377 开源库）是一个基于官方 SDK 接口的第三方开源库
- * Copyright (c) 2022 SEEKFREE 逐飞科技
+ * TC377 Opensourec Library 即（TC377 开源库）是一个基于官方 SDK
+ *接口的第三方开源库 Copyright (c) 2022 SEEKFREE 逐飞科技
  *
  * 本文件是 TC377 开源库的一部分
  *
  * TC377 开源库 是免费软件
- * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公共许可证）的条款
- * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/或修改它
+ * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即
+ *GNU通用公共许可证）的条款 即 GPL 的第3版（即
+ *GPL3.0）或（您选择的）任何后来的版本，重新发布和/或修改它
  *
  * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
  * 甚至没有隐含的适销性或适合特定用途的保证
@@ -17,8 +18,8 @@
  *
  * 额外注明：
  * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
- * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
- * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+ * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt
+ *文件中 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
  * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（即本声明）
  *
  * 文件名称          cpu0_main
@@ -32,6 +33,8 @@
  * 日期              作者                备注
  * 2022-11-03       pudding            first version
  ********************************************************************************************************************/
+#include "Attitude.h"
+#include "control.h"
 #include "motor.h"
 #include "zf_common_headfile.h"
 #pragma section all "cpu0_dsram"
@@ -42,20 +45,19 @@
 // 本例程是开源库空工程 可用作移植或者测试各类内外设
 
 // **************************** 代码区域 ****************************
-int core0_main(void)
-{
-    clock_init(); // 获取时钟频率<务必保留>
-    debug_init(); // 初始化默认调试串口
+int core0_main(void) {
+    clock_init();  // 获取时钟频率<务必保留>
+    debug_init();  // 初始化默认调试串口
     // 此处编写用户代码 例如外设初始化代码等
 
     motor_init();
 
     // 此处编写用户代码 例如外设初始化代码等
-    cpu_wait_event_ready(); // 等待所有核心初始化完毕
-    while (TRUE)
-    {
+    cpu_wait_event_ready();  // 等待所有核心初始化完毕
+    while (TRUE) {
         // 此处编写需要循环执行的代码
-
+        // printf("%.2f, %.2f\n", g_control_target.sideAngleVelocity,
+        //        currentSideAngleVelocity);
         // 此处编写需要循环执行的代码
     }
 }

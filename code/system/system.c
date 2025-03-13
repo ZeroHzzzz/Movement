@@ -11,17 +11,17 @@
 RunState_t runState;
 
 void system_init() {
-    uart_init(UART_2, 115200, UART2_TX_P10_5, UART2_RX_P10_6);
+    // uart_init(UART_2, 115200, UART2_TX_P10_5, UART2_RX_P10_6);
 
     // init small driver uart
     small_driver_uart_init();
-    printf("small_driver_uart_init\n");
+    // printf("small_driver_uart_init\n");
     // init motor
     motor_init();
-    printf("motor_init\n");
+    // printf("motor_init\n");
     // init encoder
     encoder_init();
-    printf("encoder_init\n");
+    // printf("encoder_init\n");
 
     // init lcd
     lcd_init();
@@ -29,26 +29,26 @@ void system_init() {
     // init key
     key_init_rewrite(KEY_MAX);
     pit_ms_init(CCU60_CH1, KEY_UPDATE_T);
-    printf("key_init\n");
+    // printf("key_init\n");
 
     // menu_param
     menu_manual_param_init();
-    printf("menu_manual_param_init\n");
+    // printf("menu_manual_param_init\n");
 
     // velocity
     velocity_init(&g_vel_motor);
-    printf("velocity_init\n");
+    // printf("velocity_init\n");
     pit_ms_init(CCU60_CH0, VELOCITY_UPDATE_T);
 
     control_manual_param_init();
-    printf("control_manual_param_init\n");
+    // printf("control_manual_param_init\n");
 
     // init imu
     imu_init();
-    printf("imu_init\n");
+    // printf("imu_init\n");
     // init attitude
     attitude_init();
-    printf("attitude_init\n");
+    // printf("attitude_init\n");
     pit_ms_init(CCU61_CH1, ATTITUDE_UPDATE_T);
 
     // read eeprom
@@ -60,11 +60,11 @@ void system_init() {
     // menu_params
     menu_get_params(&g_euler_angle_bias, &g_control_time,
                     &g_control_turn_manual_params, &g_control_motion_params);
-    printf("menu_get_params\n");
+    // printf("menu_get_params\n");
 
     // control init
     control_init(&g_control_motion_params);
-    printf("control_init\n");
+    // printf("control_init\n");
     // start to balance
     pit_ms_init(CCU61_CH0, CONTROL_UPDATE_T);
 }

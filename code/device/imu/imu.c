@@ -4,7 +4,7 @@ IMU_DATA g_imu_data;
 float gyroOffset[3] = {0.0f, 0.0f, 0.0f};
 
 void imu_init() {
-    printf("Use IMU963RA\n");
+    // printf("Use IMU963RA\n");
     bool tmp_flag = imu963ra_init();
     if (tmp_flag == 1) {
         printf("IMU963RA init Failed\n");
