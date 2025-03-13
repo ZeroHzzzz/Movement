@@ -230,7 +230,7 @@ static void control_side_angle(struct EulerAngle* euler_angle_bias,
 static void control_side_angle_velocity(struct Control_Target* control_target) {
     static float momentumGyroFilter[2] = {0};  // 角度速度滤波
     momentumGyroFilter[1] = momentumGyroFilter[0];
-    momentumGyroFilter[0] = currentSideAngleVelocity / 0.0174533f;
+    momentumGyroFilter[0] = currentSideAngleVelocity;
 
     // printf("%.2f, %.2f\n", control_target->sideAngleVelocity,
     //        currentSideAngleVelocity / 0.0174533f);
