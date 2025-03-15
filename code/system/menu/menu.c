@@ -3,6 +3,7 @@
 #include "key.h"
 #include "menu_input.h"
 #include "motor.h"
+#include "small_driver_uart_control.h"
 #include "system.h"
 #include "test.h"
 //======================================================================================================================
@@ -118,18 +119,6 @@ MENU_TABLE PID_Table[] = {
      {.UINT32 = (uint32*)&g_menu_manual_param.bottom_velocity_parameter[2]},
      Param_Uint,
      {.ItemFunc = Menu_Null}},
-    {(uint8*)"SV_kp",
-     {.UINT32 = (uint32*)&g_menu_manual_param.side_velocity_parameter[0]},
-     Param_Uint,
-     {.ItemFunc = Menu_Null}},
-    {(uint8*)"SV_ki",
-     {.UINT32 = (uint32*)&g_menu_manual_param.side_velocity_parameter[1]},
-     Param_Uint,
-     {.ItemFunc = Menu_Null}},
-    {(uint8*)"SV_kd",
-     {.UINT32 = (uint32*)&g_menu_manual_param.side_velocity_parameter[2]},
-     Param_Uint,
-     {.ItemFunc = Menu_Null}},
     {(uint8*)"SAV_kp",
      {.UINT32 = (uint32*)&g_menu_manual_param.side_angle_velocity_parameter[0]},
      Param_Uint,
@@ -140,6 +129,18 @@ MENU_TABLE PID_Table[] = {
      {.ItemFunc = Menu_Null}},
     {(uint8*)"SAV_kd",
      {.UINT32 = (uint32*)&g_menu_manual_param.side_angle_velocity_parameter[2]},
+     Param_Uint,
+     {.ItemFunc = Menu_Null}},
+    {(uint8*)"SV_kp",
+     {.UINT32 = (uint32*)&g_menu_manual_param.side_velocity_parameter[0]},
+     Param_Uint,
+     {.ItemFunc = Menu_Null}},
+    {(uint8*)"SV_ki",
+     {.UINT32 = (uint32*)&g_menu_manual_param.side_velocity_parameter[1]},
+     Param_Uint,
+     {.ItemFunc = Menu_Null}},
+    {(uint8*)"SV_kd",
+     {.UINT32 = (uint32*)&g_menu_manual_param.side_velocity_parameter[2]},
      Param_Uint,
      {.ItemFunc = Menu_Null}},
     {(uint8*)"SA_kp",
@@ -235,6 +236,10 @@ MENU_TABLE Test_MenuTable[] = {
      Functions,
      {.ItemFunc = test_attitude}},
     {(uint8*)"IMU", {.SubMenu = Table_Null}, Functions, {.ItemFunc = test_imu}},
+    {(uint8*)"MOTOR INIT",
+     {.SubMenu = Table_Null},
+     Functions,
+     {.ItemFunc = small_driver_get_speed}},
 };
 
 MENU_TABLE MainMenu_Table[] = {
