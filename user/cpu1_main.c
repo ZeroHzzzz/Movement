@@ -90,18 +90,11 @@ void core1_main(void) {
             // lcd_show_float(8, 6, currentSideAngle, 3, 3);
             // lcd_show_string(0, 7, "Yaw:");
             // lcd_show_float(8, 7, yawAngle, 3, 3);
-            lcd_show_int(
-                0, 4,
-                g_control_motion_params.bottom_angle_velocity_parameter[0], 5);
-            lcd_show_int(
-                0, 5,
-                g_control_motion_params.bottom_angle_velocity_parameter[1], 5);
-            lcd_show_int(
-                0, 6,
-                g_control_motion_params.bottom_angle_velocity_parameter[2], 5);
+            lcd_show_int(0, 5, motor_value.receive_left_speed_data, 5);
+            lcd_show_int(7, 5, motor_value.receive_right_speed_data, 5);
 
-            lcd_show_int(0, 7, g_vel_motor.momentumFront, 5);
-            lcd_show_int(7, 7, g_vel_motor.momentumBack, 5);
+            lcd_show_int(0, 6, g_vel_motor.momentumFront, 5);
+            lcd_show_int(7, 6, g_vel_motor.momentumBack, 5);
         }
         // 此处编写需要循环执行的代码
     }
