@@ -9,6 +9,7 @@
 // global
 uint8 g_turn_start_flag = 0;
 int32 g_control_shutdown_flag = 0;
+uint32 g_control_bottom_flag = 0;
 struct Control_Turn_Manual_Params g_control_turn_manual_params;
 struct Control_Target g_control_target;
 struct Control_Flag g_control_flag;
@@ -239,7 +240,7 @@ static void control_side_angle_velocity(struct Control_Target* control_target) {
     s_side_balance_duty =
         (int32)(PID_calc_DELTA(&side_angle_velocity_PID, momentumGyroFilter[0],
                                control_target->sideAngleVelocity));
-    printf("%d\n", s_side_balance_duty);
+    // printf("%d\n", s_side_balance_duty);
 }
 
 void control_shutdown(struct Control_Target* control_target,

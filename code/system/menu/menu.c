@@ -65,6 +65,7 @@ uint32* EEPROM_DATA_UINT[] = {
     (uint32*)(&g_menu_manual_param.bucklingFrontCoefficientT),
     (uint32*)(&bottom_motor_deadzone),
     (uint32*)(&g_control_shutdown_flag),
+    (uint32*)(&g_control_bottom_flag),
 };
 
 int32* EEPROM_DATA_INT[] = {
@@ -249,6 +250,10 @@ MENU_TABLE MainMenu_Table[] = {
      {.INT32 = (int32*)&g_control_shutdown_flag},
      Param_Int,
      {.ItemFunc = Menu_Null}},
+     {(uint8*)"bottom",
+        {.INT32 = (int32*)&g_control_bottom_flag},
+        Param_Int,
+        {.ItemFunc = Menu_Null}},
     {(uint8*)"1.PID_Param",
      {.SubMenu = PID_Table},
      Sub_Menus,
@@ -265,7 +270,11 @@ MENU_TABLE MainMenu_Table[] = {
      {.SubMenu = Calibration_MenuTable},
      Sub_Menus,
      {.SubMenuNum = MenuNum(Calibration_MenuTable)}},
-    {(uint8*)"5.Test",
+    {(uint8*)"5.Attitude",
+     {.SubMenu = Table_Null},
+     Functions,
+     {.ItemFunc = test_attitude}},
+    {(uint8*)"6.Test",
      {.SubMenu = Test_MenuTable},
      Sub_Menus,
      {.SubMenuNum = MenuNum(Test_MenuTable)}},

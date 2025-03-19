@@ -62,39 +62,19 @@ void core1_main(void) {
     g_exit_menu_flag = 1;
     runState = CAR_STABLE;
     while (TRUE) {
-        // printf("%d\n", runState);
         // 此处编写需要循环执行的代码
-        // printf("%f, %f, %f\n", currentFrontAngle, currentSideAngle,
-        // yawAngle); printf("%d\n", runState);
         if (g_exit_menu_flag) {
             lcd_show_string(0, 0, "Bottom:");
-            lcd_show_int(8, 0, get_bottom_duty(), 5);
-            lcd_show_string(0, 1, "Side:");
-            lcd_show_int(8, 1, get_side_duty(), 5);
-
+            lcd_show_int(0, 1, get_bottom_duty(), 5);
+            lcd_show_int(8, 1, g_vel_motor.bottomFiltered, 5);
             lcd_show_float(0, 2, (currentFrontAngle), 3, 5);
-            lcd_show_float(8, 2,
-                           currentFrontAngle - g_euler_angle_bias.pitch -
-                               g_control_target.frontAngle,
-                           3, 5);
-            lcd_show_float(0, 3, (currentSideAngle), 3, 5);
-            lcd_show_float(8, 3,
-                           currentSideAngle - g_euler_angle_bias.roll -
-                               g_control_target.sideAngle,
-                           3, 5);
-            lcd_show_int(0, 4, runState, 3);
-
-            // lcd_show_string(0, 5, "Pitch:");
-            // lcd_show_float(8, 5, currentFrontAngle, 3, 3);
-            // lcd_show_string(0, 6, "Row:");
-            // lcd_show_float(8, 6, currentSideAngle, 3, 3);
-            // lcd_show_string(0, 7, "Yaw:");
-            // lcd_show_float(8, 7, yawAngle, 3, 3);
-            lcd_show_int(0, 5, motor_value.receive_left_speed_data, 5);
-            lcd_show_int(7, 5, motor_value.receive_right_speed_data, 5);
-
-            lcd_show_int(0, 6, g_vel_motor.momentumFront, 5);
-            lcd_show_int(7, 6, g_vel_motor.momentumBack, 5);
+            lcd_show_float(8, 2, currentFrontAngle - g_euler_angle_bias.pitch - g_control_target.frontAngle, 3, 5);
+            lcd_show_string(0, 3, "Side:");
+            lcd_show_int(0, 4, get_side_duty(), 5);
+            lcd_show_int(0, 5, g_vel_motor.momentumFront, 5);
+            lcd_show_int(8, 5, g_vel_motor.momentumBack, 5);
+            lcd_show_float(0, 6, (currentSideAngle), 3, 5);
+            lcd_show_float(8, 6, currentSideAngle - g_euler_angle_bias.roll - g_control_target.sideAngle, 3, 5);
         }
         // 此处编写需要循环执行的代码
     }

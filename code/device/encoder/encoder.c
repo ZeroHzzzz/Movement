@@ -29,16 +29,16 @@ void encoder_init() {
 }
 
 void get_momentum_encoder(struct Velocity_Motor* vel_motor) {
-    static int32 frontEncoder[3] = {0, 0, 0};
-    static int32 backEncoder[3] = {0, 0, 0};
-    frontEncoder[2] = frontEncoder[1];
-    frontEncoder[1] = frontEncoder[0];
-    backEncoder[2] = backEncoder[1];
-    backEncoder[1] = backEncoder[0];
+    // static int32 frontEncoder[3] = {0, 0, 0};
+    // static int32 backEncoder[3] = {0, 0, 0};
+    // frontEncoder[2] = frontEncoder[1];
+    // frontEncoder[1] = frontEncoder[0];
+    // backEncoder[2] = backEncoder[1];
+    // backEncoder[1] = backEncoder[0];
     // int32 frontEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_FRONT);
     // int32 backEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_BACK);
-    int32 frontEncoderTemp = motor_value.receive_left_speed_data;
-    int32 backEncoderTemp = motor_value.receive_right_speed_data;
+    int32 frontEncoderTemp = motor_value.receive_left_speed_data * 2.2;
+    int32 backEncoderTemp = motor_value.receive_right_speed_data * 2.2;
     // {
     //     tft180_show_int(0,20,frontEncoderTemp,3);
     //     tft180_show_int(0,40,backEncoderTemp,3);

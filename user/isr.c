@@ -85,9 +85,12 @@ IFX_INTERRUPT(cc61_pit_ch0_isr,
             static uint16 count = 0;
             count++;
             g_control_target.frontVelocity = 0;
-            bottom_control_timer(&g_control_time, &g_control_flag,
-                                 &g_control_target, &g_vel_motor,
-                                 &g_euler_angle_bias);
+            if(g_control_bottom_flag != 0) {
+                bottom_control_timer(&g_control_time, &g_control_flag,
+                    &g_control_target, &g_vel_motor,
+                    &g_euler_angle_bias);
+            }
+            
             // turnControlTimer();
             side_control_timer(&g_control_time, &g_control_flag,
                                &g_control_target, &g_control_turn_manual_params,
