@@ -6,6 +6,7 @@
 #include "small_driver_uart_control.h"
 #include "system.h"
 #include "test.h"
+
 //======================================================================================================================
 typedef struct MENU_TABLE MENU_TABLE;  // 菜单执行
 typedef struct MENU_PRMT MENU_PRMT;    // 菜单参数
@@ -63,6 +64,7 @@ uint32* EEPROM_DATA_UINT[] = {
     (uint32*)(&g_menu_manual_param.bucklingFrontCoefficientV),
     (uint32*)(&g_menu_manual_param.bucklingFrontCoefficientT),
     (uint32*)(&bottom_motor_deadzone),
+    (uint32*)(&g_control_shutdown_flag),
 };
 
 int32* EEPROM_DATA_INT[] = {
@@ -243,6 +245,10 @@ MENU_TABLE Test_MenuTable[] = {
 };
 
 MENU_TABLE MainMenu_Table[] = {
+    {(uint8*)"shutdown",
+     {.INT32 = (int32*)&g_control_shutdown_flag},
+     Param_Int,
+     {.ItemFunc = Menu_Null}},
     {(uint8*)"1.PID_Param",
      {.SubMenu = PID_Table},
      Sub_Menus,
@@ -263,7 +269,6 @@ MENU_TABLE MainMenu_Table[] = {
      {.SubMenu = Test_MenuTable},
      Sub_Menus,
      {.SubMenuNum = MenuNum(Test_MenuTable)}},
-
 };
 
 /******************************************************************************

@@ -8,6 +8,7 @@
 
 // global
 uint8 g_turn_start_flag = 0;
+int32 g_control_shutdown_flag = 0;
 struct Control_Turn_Manual_Params g_control_turn_manual_params;
 struct Control_Target g_control_target;
 struct Control_Flag g_control_flag;
@@ -243,25 +244,29 @@ static void control_side_angle_velocity(struct Control_Target* control_target) {
 
 void control_shutdown(struct Control_Target* control_target,
                       struct EulerAngle* euler_angle_bias) {
-    if (fabsf(currentSideAngle - euler_angle_bias->roll -
-              control_target->sideAngle) > 28) {
-        stop_bottom_motor();
-        stop_momentum_motor();
+    if (g_control_shutdown_flag != 0) {
+        if (fabsf(currentSideAngle - euler_angle_bias->roll -
+                  control_target->sideAngle) > 28) {
+            stop_bottom_motor();
+            stop_momentum_motor();
 
-        printf("control_shutdown 1\n");
-        zf_assert(0);
-        runState = CAR_STOP;
-    }
-    if (fabsf(currentFrontAngle - euler_angle_bias->pitch -
-              control_target->frontAngle) > 60) {
-        stop_bottom_motor();
-        stop_momentum_motor();
+            printf("control_shutdown 1\n");
+            char tmp[10];
+            snprintf(tmp, 10, "%.3f", euler_angle_bias->roll);
+            zf_log(0, tmp);
+            runState = CAR_STOP;
+        }
+        if (fabsf(currentFrontAngle - euler_angle_bias->pitch -
+                  control_target->frontAngle) > 60) {
+            stop_bottom_motor();
+            stop_momentum_motor();
 
-        printf("control_shutdown 2\n");
-        char tmp[10];
-        snprintf(tmp, 10, "%.3f", euler_angle_bias->roll);
-        zf_log(0, tmp);
-        runState = CAR_STOP;
+            printf("control_shutdown 2\n");
+            char tmp[10];
+            snprintf(tmp, 10, "%.3f", euler_angle_bias->pitch);
+            zf_log(0, tmp);
+            runState = CAR_STOP;
+        }
     }
 }
 

@@ -87,6 +87,7 @@ struct EulerAngle;
 struct Menu_Manual_Param;
 
 extern uint8 g_turn_start_flag;
+extern int32 g_control_shutdown_flag;
 extern struct Control_Turn_Manual_Params g_control_turn_manual_params;
 extern struct Control_Target g_control_target;
 extern struct Control_Flag g_control_flag;
