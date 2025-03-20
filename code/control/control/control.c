@@ -10,6 +10,11 @@
 uint8 g_turn_start_flag = 0;
 int32 g_control_shutdown_flag = 0;
 uint32 g_control_bottom_flag = 0;
+
+uint32 g_control_output_sav_flag = 0;
+uint32 g_control_output_sv_flag = 0;
+uint32 g_control_output_sa_flag = 0;
+
 struct Control_Turn_Manual_Params g_control_turn_manual_params;
 struct Control_Target g_control_target;
 struct Control_Flag g_control_flag;
@@ -215,6 +220,11 @@ static void control_side_velocity(
         (float)(vel_motor->momentumFront - vel_motor->momentumBack);
     control_target->sideAngle = (float)PID_calc_Position(
         &side_velocity_PID, (float)momentumVelocityFilter, 0.0f);
+    
+    // 输出pid信息：error，输出，实际值
+    if(g_control_output_sv_flag != 0){
+        printf("%f,%f,%f\n", side_velocity_PID.error[0], control_target->sideAngle, momentumVelocityFilter);
+    }
 }
 
 static void control_side_angle(struct EulerAngle* euler_angle_bias,
@@ -227,6 +237,11 @@ static void control_side_angle(struct EulerAngle* euler_angle_bias,
     control_target->sideAngleVelocity = PID_calc_Position(
         &side_angle_PID, (momentumAngleFilter[0] - euler_angle_bias->roll),
         control_target->sideAngle);
+
+    // 输出pid信息：error，输出，实际值
+    if(g_control_output_sa_flag != 0){
+        printf("%f,%f,%f\n", side_angle_PID.error[0], control_target->sideAngleVelocity, momentumAngleFilter[0]);
+    }
 }
 
 static void control_side_angle_velocity(struct Control_Target* control_target) {
@@ -234,13 +249,14 @@ static void control_side_angle_velocity(struct Control_Target* control_target) {
     momentumGyroFilter[1] = momentumGyroFilter[0];
     momentumGyroFilter[0] = currentSideAngleVelocity;
 
-    // printf("%.2f, %.2f\n", control_target->sideAngleVelocity,
-    //        currentSideAngleVelocity / 0.0174533f);
-
     s_side_balance_duty =
         (int32)(PID_calc_DELTA(&side_angle_velocity_PID, momentumGyroFilter[0],
                                control_target->sideAngleVelocity));
-    // printf("%d\n", s_side_balance_duty);
+                               
+    // 输出pid信息：error，输出，实际值
+    if(g_control_output_sav_flag != 0){
+        printf("%f,%f,%f\n", side_angle_velocity_PID.error[0], (float)s_side_balance_duty, momentumGyroFilter[0]);
+    }
 }
 
 void control_shutdown(struct Control_Target* control_target,

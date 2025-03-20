@@ -65,16 +65,17 @@ void core1_main(void) {
         // 此处编写需要循环执行的代码
         if (g_exit_menu_flag) {
             lcd_show_string(0, 0, "Bottom:");
+            lcd_show_float(8, 0, g_control_target.frontAngleVelocity, 3, 5);
             lcd_show_int(0, 1, get_bottom_duty(), 5);
             lcd_show_int(8, 1, g_vel_motor.bottomFiltered, 5);
             lcd_show_float(0, 2, (currentFrontAngle), 3, 5);
             lcd_show_float(8, 2, currentFrontAngle - g_euler_angle_bias.pitch - g_control_target.frontAngle, 3, 5);
             lcd_show_string(0, 3, "Side:");
+            lcd_show_float(8, 3, g_control_target.sideAngleVelocity, 3, 5);
             lcd_show_int(0, 4, get_side_duty(), 5);
-            lcd_show_int(0, 5, g_vel_motor.momentumFront, 5);
-            lcd_show_int(8, 5, g_vel_motor.momentumBack, 5);
-            lcd_show_float(0, 6, (currentSideAngle), 3, 5);
-            lcd_show_float(8, 6, currentSideAngle - g_euler_angle_bias.roll - g_control_target.sideAngle, 3, 5);
+            lcd_show_int(8, 4, g_vel_motor.momentumFront, 5);
+            lcd_show_float(0, 5, (currentSideAngle), 3, 5);
+            lcd_show_float(8, 5, currentSideAngle - g_euler_angle_bias.roll - g_control_target.sideAngle, 3, 5);
         }
         // 此处编写需要循环执行的代码
     }

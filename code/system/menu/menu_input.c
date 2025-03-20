@@ -30,7 +30,7 @@ void menu_get_params(
         control_motion_params->side_angle_velocity_parameter[i] =
             g_menu_manual_param.side_angle_velocity_parameter[i];
         control_motion_params->side_angle_parameter[i] =
-            g_menu_manual_param.side_angle_parameter[i];
+            g_menu_manual_param.side_angle_parameter[i] * 0.1f;
         control_motion_params->side_velocity_parameter[i] =
             g_menu_manual_param.side_velocity_parameter[i];
 

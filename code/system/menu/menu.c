@@ -66,6 +66,9 @@ uint32* EEPROM_DATA_UINT[] = {
     (uint32*)(&bottom_motor_deadzone),
     (uint32*)(&g_control_shutdown_flag),
     (uint32*)(&g_control_bottom_flag),
+    (uint32*)(&g_control_output_sav_flag),
+    (uint32*)(&g_control_output_sv_flag),
+    (uint32*)(&g_control_output_sa_flag),
 };
 
 int32* EEPROM_DATA_INT[] = {
@@ -245,6 +248,21 @@ MENU_TABLE Test_MenuTable[] = {
      {.ItemFunc = small_driver_get_speed}},
 };
 
+MENU_TABLE Output_MenuTable[] = {
+    {(uint8*)"sav",
+     {.INT32 = (int32*)&g_control_output_sav_flag},
+     Param_Int,
+     {.ItemFunc = Menu_Null}},
+    {(uint8*)"sa",
+     {.INT32 = (int32*)&g_control_output_sa_flag},
+     Param_Int,
+     {.ItemFunc = Menu_Null}},
+    {(uint8*)"sv",
+     {.INT32 = (int32*)&g_control_output_sv_flag},
+     Param_Int,
+     {.ItemFunc = Menu_Null}},
+};
+
 MENU_TABLE MainMenu_Table[] = {
     {(uint8*)"shutdown",
      {.INT32 = (int32*)&g_control_shutdown_flag},
@@ -278,6 +296,10 @@ MENU_TABLE MainMenu_Table[] = {
      {.SubMenu = Test_MenuTable},
      Sub_Menus,
      {.SubMenuNum = MenuNum(Test_MenuTable)}},
+    {(uint8*)"7.Ouput",
+     {.SubMenu = Output_MenuTable},
+     Sub_Menus,
+     {.SubMenuNum = MenuNum(Output_MenuTable)}},
 };
 
 /******************************************************************************
