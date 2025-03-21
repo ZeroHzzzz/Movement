@@ -174,5 +174,5 @@ void small_driver_uart_init(void) {
 
     small_driver_set_duty(0, 0);  // 设置0占空比
 
-    small_driver_get_speed();  // 获取实时速度数据
+    // small_driver_get_speed();  // 获取实时速度数据
 }
