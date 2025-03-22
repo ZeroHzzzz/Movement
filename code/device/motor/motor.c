@@ -39,7 +39,10 @@ void set_momentum_motor_pwm(int32 pwmFront, int32 pwmBack) {
     restrictValueI(&pwmFront, MOMENTUM_MOTOR_PWM_MIN, MOMENTUM_MOTOR_PWM_MAX);
     restrictValueI(&pwmBack, MOMENTUM_MOTOR_PWM_MIN, MOMENTUM_MOTOR_PWM_MAX);
     // printf("%d, %d\n", pwmFront, pwmBack);
-    small_driver_set_duty(pwmFront, pwmBack);
+    small_driver_set_duty(-pwmFront, -pwmBack);
+
+    // x轴朝前方，y轴朝右方，z轴朝下方
+    // duty 为正的时候，电机转动方向为逆时针
 }
 
 void stop_momentum_motor(void) {

@@ -6,8 +6,9 @@
 static void pass_momentum_encoder(int32 frontValue,
                                   int32 backValue,
                                   struct Velocity_Motor* vel_motor) {
-    vel_motor->momentumFront = -frontValue;  // TODO :fix bug
-    vel_motor->momentumBack = -backValue;
+    // 我们获取到的速度是角速度，需转化为线速度。
+    vel_motor->momentumFront = frontValue * 0.04;
+    vel_motor->momentumBack = backValue * 0.04;
     vel_motor->velocityDiff =
         vel_motor->momentumFront + vel_motor->momentumBack;
 }
@@ -37,8 +38,10 @@ void get_momentum_encoder(struct Velocity_Motor* vel_motor) {
     // backEncoder[1] = backEncoder[0];
     // int32 frontEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_FRONT);
     // int32 backEncoderTemp = encoder_get_count(MOMENTUM_ENCODER_BACK);
-    int32 frontEncoderTemp = motor_value.receive_left_speed_data * 2.2;
-    int32 backEncoderTemp = motor_value.receive_right_speed_data * 2.2;
+
+    int32 frontEncoderTemp = motor_value.receive_left_speed_data;
+    int32 backEncoderTemp = motor_value.receive_right_speed_data;
+
     // {
     //     tft180_show_int(0,20,frontEncoderTemp,3);
     //     tft180_show_int(0,40,backEncoderTemp,3);

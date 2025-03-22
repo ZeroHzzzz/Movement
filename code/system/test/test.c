@@ -44,11 +44,11 @@ void test_side_motor() {
     while (keymsg.key != KEY_L) {
         if (keymsg.key == KEY_U)  // 向前
         {
-            small_driver_set_duty(1000, 0);
+            small_driver_set_duty(2000, 0);
         }
         if (keymsg.key == KEY_D)  // 向后
         {
-            small_driver_set_duty(-1000, 0);
+            small_driver_set_duty(-2000, 0);
         }
         if (keymsg.key == KEY_B)  // 向前
         {
@@ -59,9 +59,9 @@ void test_side_motor() {
             small_driver_set_duty(0, -1000);
         }
         // count++;
-        lcd_show_string(0, 5, "Left:");
+        lcd_show_string(0, 5, "Front:");
         lcd_show_int(8, 5, g_vel_motor.momentumFront, 5);
-        lcd_show_string(0, 6, "Right:");
+        lcd_show_string(0, 6, "Back:");
         lcd_show_int(8, 6, g_vel_motor.momentumBack, 5);
         // lcd_show_string(0, 7, "count:");
         // lcd_show_int(8, 7, count, 5);

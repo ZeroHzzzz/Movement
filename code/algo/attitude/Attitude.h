@@ -7,13 +7,13 @@
 
 // front direction
 #define currentFrontAngle g_euler_angle.pitch
-// #define currentFrontAngleVelocity (g_imu_data.gyro.y / (0.0174533f))
-#define currentFrontAngleVelocity g_imu_data.gyro.y
+#define currentFrontAngleVelocity (g_imu_data.gyro.y / (0.0174533f))
+// #define currentFrontAngleVelocity g_imu_data.gyro.y
 #define currentFrontAcceleration g_imu_data.acc.x
 // side direction
 #define currentSideAngle g_euler_angle.roll
-// #define currentSideAngleVelocity (g_imu_data.gyro.x / (0.0174533f))
-#define currentSideAngleVelocity g_imu_data.gyro.x
+#define currentSideAngleVelocity (g_imu_data.gyro.x / (0.0174533f))
+// #define currentSideAngleVelocity g_imu_data.gyro.x
 #define currentSideAcceleration g_imu_data.acc.y
 // yaw direction
 #define yawAngle g_euler_angle.yaw
