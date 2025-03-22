@@ -69,6 +69,7 @@ uint32* EEPROM_DATA_UINT[] = {
     (uint32*)(&g_control_output_sav_flag),
     (uint32*)(&g_control_output_sv_flag),
     (uint32*)(&g_control_output_sa_flag),
+    (uint32*)(&g_imu_use_imu963ra_flag),
 };
 
 int32* EEPROM_DATA_INT[] = {
@@ -242,25 +243,22 @@ MENU_TABLE Test_MenuTable[] = {
      Functions,
      {.ItemFunc = test_attitude}},
     {(uint8*)"IMU", {.SubMenu = Table_Null}, Functions, {.ItemFunc = test_imu}},
-    {(uint8*)"MOTOR INIT",
-     {.SubMenu = Table_Null},
-     Functions,
-     {.ItemFunc = small_driver_get_speed}},
 };
 
-MENU_TABLE Output_MenuTable[] = {
-    {(uint8*)"sav",
+MENU_TABLE Setting_MenuTable[] = {
+    {(uint8*)"sav_output",
      {.INT32 = (int32*)&g_control_output_sav_flag},
      Param_Int,
      {.ItemFunc = Menu_Null}},
-    {(uint8*)"sa",
+    {(uint8*)"sa_output",
      {.INT32 = (int32*)&g_control_output_sa_flag},
      Param_Int,
      {.ItemFunc = Menu_Null}},
-    {(uint8*)"sv",
+    {(uint8*)"sv_output",
      {.INT32 = (int32*)&g_control_output_sv_flag},
      Param_Int,
      {.ItemFunc = Menu_Null}},
+    {(uint8*)"use 963", {.INT32 = (int32*)&g_imu_use_imu963ra_flag}},
 };
 
 MENU_TABLE MainMenu_Table[] = {
@@ -268,10 +266,10 @@ MENU_TABLE MainMenu_Table[] = {
      {.INT32 = (int32*)&g_control_shutdown_flag},
      Param_Int,
      {.ItemFunc = Menu_Null}},
-     {(uint8*)"bottom",
-        {.INT32 = (int32*)&g_control_bottom_flag},
-        Param_Int,
-        {.ItemFunc = Menu_Null}},
+    {(uint8*)"bottom",
+     {.INT32 = (int32*)&g_control_bottom_flag},
+     Param_Int,
+     {.ItemFunc = Menu_Null}},
     {(uint8*)"1.PID_Param",
      {.SubMenu = PID_Table},
      Sub_Menus,
@@ -288,18 +286,14 @@ MENU_TABLE MainMenu_Table[] = {
      {.SubMenu = Calibration_MenuTable},
      Sub_Menus,
      {.SubMenuNum = MenuNum(Calibration_MenuTable)}},
-    {(uint8*)"5.Attitude",
-     {.SubMenu = Table_Null},
-     Functions,
-     {.ItemFunc = test_attitude}},
-    {(uint8*)"6.Test",
+    {(uint8*)"5.Test",
      {.SubMenu = Test_MenuTable},
      Sub_Menus,
      {.SubMenuNum = MenuNum(Test_MenuTable)}},
-    {(uint8*)"7.Ouput",
-     {.SubMenu = Output_MenuTable},
+    {(uint8*)"6.Setting",
+     {.SubMenu = Setting_MenuTable},
      Sub_Menus,
-     {.SubMenuNum = MenuNum(Output_MenuTable)}},
+     {.SubMenuNum = MenuNum(Setting_MenuTable)}},
 };
 
 /******************************************************************************

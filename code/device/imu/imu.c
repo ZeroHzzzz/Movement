@@ -2,27 +2,49 @@
 
 IMU_DATA g_imu_data;
 float gyroOffset[3] = {0.0f, 0.0f, 0.0f};
+uint8 g_imu_use_imu963ra_flag = 1;  // 为0使用IMU660RB，为1使用IMU963RA
 
 void imu_init() {
-    // printf("Use IMU963RA\n");
-    bool tmp_flag = imu963ra_init();
-    if (tmp_flag == 1) {
-        printf("IMU963RA init Failed\n");
-        return;  // TODO: 改成直接退出代码
+    if (g_imu_use_imu963ra_flag != 0) {
+        // printf("Use IMU963RA\n");
+        bool tmp_init_flag = imu963ra_init();
+        if (tmp_init_flag == 1) {
+            printf("IMU963RA init Failed\n");
+            return;  // TODO: 改成直接退出代码
+        }
+    } else {
+        bool tmp_init_flag = imu660rb_init();
+        if (tmp_init_flag == 1) {
+            printf("IMU660RB init Failed\n");
+            return;
+        }
     }
 }
 
 void imu_get_data(IMU_DATA* data) {
-    imu963ra_get_gyro();
-    imu963ra_get_acc();
+    if (g_imu_use_imu963ra_flag != 0) {
+        imu963ra_get_gyro();
+        imu963ra_get_acc();
 
-    data->gyro.x = imu963ra_gyro_transition(imu963ra_gyro_x) * DEG2RAD;
-    data->gyro.y = -imu963ra_gyro_transition(imu963ra_gyro_y) * DEG2RAD;
-    data->gyro.z = imu963ra_gyro_transition(imu963ra_gyro_z) * DEG2RAD;
+        data->gyro.x = imu963ra_gyro_transition(imu963ra_gyro_x) * DEG2RAD;
+        data->gyro.y = -imu963ra_gyro_transition(imu963ra_gyro_y) * DEG2RAD;
+        data->gyro.z = imu963ra_gyro_transition(imu963ra_gyro_z) * DEG2RAD;
 
-    data->acc.x = imu963ra_acc_transition(imu963ra_acc_x) * GravityAcc;
-    data->acc.y = -imu963ra_acc_transition(imu963ra_acc_y) * GravityAcc;
-    data->acc.z = imu963ra_acc_transition(imu963ra_acc_z) * GravityAcc;
+        data->acc.x = imu963ra_acc_transition(imu963ra_acc_x) * GravityAcc;
+        data->acc.y = -imu963ra_acc_transition(imu963ra_acc_y) * GravityAcc;
+        data->acc.z = imu963ra_acc_transition(imu963ra_acc_z) * GravityAcc;
+    } else {
+        imu660rb_get_acc();
+        imu660rb_get_gyro();
+
+        data->gyro.x = imu660rb_gyro_transition(imu660rb_gyro_x) * DEG2RAD;
+        data->gyro.y = -imu660rb_gyro_transition(imu660rb_gyro_y) * DEG2RAD;
+        data->gyro.z = imu660rb_gyro_transition(imu660rb_gyro_z) * DEG2RAD;
+
+        data->acc.x = imu660rb_acc_transition(imu660rb_acc_x) * GravityAcc;
+        data->acc.y = -imu660rb_acc_transition(imu660rb_acc_y) * GravityAcc;
+        data->acc.z = imu660rb_acc_transition(imu660rb_acc_z) * GravityAcc;
+    }
 }
 
 void imu_init_offset() {
