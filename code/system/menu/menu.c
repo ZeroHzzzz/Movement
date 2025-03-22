@@ -69,7 +69,6 @@ uint32* EEPROM_DATA_UINT[] = {
     (uint32*)(&g_control_output_sav_flag),
     (uint32*)(&g_control_output_sv_flag),
     (uint32*)(&g_control_output_sa_flag),
-    (uint32*)(&g_imu_use_imu963ra_flag),
 };
 
 int32* EEPROM_DATA_INT[] = {
@@ -258,7 +257,6 @@ MENU_TABLE Setting_MenuTable[] = {
      {.INT32 = (int32*)&g_control_output_sv_flag},
      Param_Int,
      {.ItemFunc = Menu_Null}},
-    {(uint8*)"use 963", {.INT32 = (int32*)&g_imu_use_imu963ra_flag}},
 };
 
 MENU_TABLE MainMenu_Table[] = {

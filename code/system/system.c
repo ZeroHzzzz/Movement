@@ -43,6 +43,9 @@ void system_init() {
     control_manual_param_init();
     // printf("control_manual_param_init\n");
 
+    // read eeprom
+    Read_EEPROM();
+
     // init imu
     imu_init();
     // printf("imu_init\n");
@@ -50,9 +53,6 @@ void system_init() {
     attitude_init();
     // printf("attitude_init\n");
     pit_ms_init(CCU61_CH1, ATTITUDE_UPDATE_T);
-
-    // read eeprom
-    Read_EEPROM();
 
     // menu
     MainMenu_Set();

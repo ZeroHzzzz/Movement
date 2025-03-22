@@ -27,6 +27,5 @@ void imu_remove_offset(IMU_DATA* data);
 
 extern IMU_DATA g_imu_data;
 extern float gyroOffset[3];  // gyroOffset
-extern uint8 g_imu_use_imu963ra_flag;
 
 #endif
